@@ -84,6 +84,7 @@ func downloadWithRetry(downloadURL, downloadLocation, version, goos, goarch stri
 	return nil
 }
 
+// DeleteDownloadedRelease deletes the downloaded Terraform release zip file to prevent cluttering the filesystem.
 func DeleteDownloadedRelease(zipFile string) error {
 	err := os.Remove(zipFile)
 	if err != nil {

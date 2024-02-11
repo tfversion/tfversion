@@ -35,10 +35,7 @@ func init() {
 }
 
 func execCmd(version string) {
-	isAlreadyDownloaded := download.IsAlreadyDownloaded(version)
-	//TODO: Print a message to the user that the version is already downloaded
-
-	if !isAlreadyDownloaded {
+	if !download.IsAlreadyDownloaded(version) {
 		// Download the Terraform release
 		zipFile, err := download.Download(version, runtime.GOOS, runtime.GOARCH)
 		if err != nil {
