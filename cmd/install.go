@@ -36,24 +36,28 @@ func init() {
 }
 
 func installA(version string) {
-	// Download the Terraform release
-	zipFile, err := download.Download(version, runtime.GOOS, runtime.GOARCH)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	// Check if the Terraform release is already downloaded
+	isAlreadyDownloaded := download.IsAlreadyDownloaded(version)
+	if !isAlreadyDownloaded {
+		// Download the Terraform release
+		zipFile, err := download.Download(version, runtime.GOOS, runtime.GOARCH)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 
-	// Unzip the downloaded Terraform release
-	err = install.UnzipRelease(zipFile, fmt.Sprintf("/home/bruno/.tfversion/%s", version))
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+		// Unzip the downloaded Terraform release
+		err = install.UnzipRelease(zipFile, fmt.Sprintf("/home/bruno/.tfversion/%s", version))
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 
-	// Clean up the downloaded zip file after unzipping
-	err = download.DeleteDownloadedRelease(zipFile)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		// Clean up the downloaded zip file after unzipping
+		err = download.DeleteDownloadedRelease(zipFile)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	}
 }
