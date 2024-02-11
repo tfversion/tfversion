@@ -15,6 +15,7 @@ const (
 )
 
 var (
+	latest     bool
 	installCmd = &cobra.Command{
 		Use:     "install",
 		Short:   "Installs a given Terraform version",
@@ -32,6 +33,7 @@ var (
 
 func init() {
 	rootCmd.AddCommand(installCmd)
+	rootCmd.Flags().BoolVar(&latest, "latest", false, "install the latest stable Terraform version")
 }
 
 func execInstall(version string) {
