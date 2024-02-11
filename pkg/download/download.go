@@ -11,6 +11,14 @@ import (
 	"github.com/bschaatsbergen/tfversion/pkg/install"
 )
 
+// IsAlreadyDownloaded checks if the given Terraform version is already downloaded and unzipped.
+func IsAlreadyDownloaded(version string) bool {
+	downloadLocation := getDownloadLocation()
+	filePath := filepath.Join(downloadLocation, version, install.TerraformBinaryName)
+	_, err := os.Stat(filePath)
+	return !os.IsNotExist(err)
+}
+
 func getDownloadLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
@@ -26,13 +34,6 @@ func ensureDownloadDirectoryExists(downloadLocation string) {
 			fmt.Printf("error creating download directory: %s", err)
 		}
 	}
-}
-
-func IsAlreadyDownloaded(version string) bool {
-	downloadLocation := getDownloadLocation()
-	filePath := filepath.Join(downloadLocation, version, install.TerraformBinaryName)
-	_, err := os.Stat(filePath)
-	return !os.IsNotExist(err)
 }
 
 // Download downloads the Terraform release zip file for the given version, OS and architecture.

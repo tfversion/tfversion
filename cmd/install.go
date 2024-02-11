@@ -26,7 +26,7 @@ var (
 				fmt.Println("See 'tfversion install -h' for help and examples")
 				os.Exit(1)
 			}
-			installA(args[0])
+			execCmd(args[0])
 		},
 	}
 )
@@ -35,9 +35,10 @@ func init() {
 	rootCmd.AddCommand(installCmd)
 }
 
-func installA(version string) {
-	// Check if the Terraform release is already downloaded
+func execCmd(version string) {
 	isAlreadyDownloaded := download.IsAlreadyDownloaded(version)
+	//TODO: Print a message to the user that the version is already downloaded
+
 	if !isAlreadyDownloaded {
 		// Download the Terraform release
 		zipFile, err := download.Download(version, runtime.GOOS, runtime.GOARCH)
