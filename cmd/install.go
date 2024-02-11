@@ -35,5 +35,9 @@ func init() {
 }
 
 func install(version string) {
-	download.DownloadTerraform(version, runtime.GOOS, runtime.GOARCH)
+	err := download.DownloadTerraform(version, runtime.GOOS, runtime.GOARCH)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
