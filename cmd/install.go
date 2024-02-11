@@ -21,7 +21,7 @@ var (
 		Short:   "Installs a given Terraform version",
 		Example: installExample,
 		Run: func(cmd *cobra.Command, args []string) {
-			if len(args) != 1 {
+			if !latest && len(args) != 1 {
 				fmt.Println("error: provide a Terraform version to install")
 				fmt.Println("See 'tfversion install -h' for help and examples")
 				os.Exit(1)
