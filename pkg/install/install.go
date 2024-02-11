@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// UnzipRelease extracts the Terraform binary from the zip file to the specified destination
+// UnzipRelease extracts the Terraform binary from the zip file to the specified destination.
 func UnzipRelease(source, destination string) error {
 	// Open the zip file
 	reader, err := zip.OpenReader(source)
@@ -18,19 +18,19 @@ func UnzipRelease(source, destination string) error {
 	}
 	defer reader.Close()
 
-	// Create the destination directory if it does not exist
+	// Create the destination directory if it does not exist.
 	err = os.MkdirAll(destination, 0755)
 	if err != nil {
 		return err
 	}
 
-	// Get the absolute destination path
+	// Get the absolute destination path.
 	destination, err = filepath.Abs(destination)
 	if err != nil {
 		return err
 	}
 
-	// Iterate over zip files inside the archive and unzip only the "terraform" binary
+	// Iterate over zip files inside the archive and unzip only the "terraform" binary.
 	for _, f := range reader.File {
 		if f.Name == TerraformBinaryName {
 			return unzipFile(f, destination)
@@ -41,20 +41,20 @@ func UnzipRelease(source, destination string) error {
 }
 
 func unzipFile(f *zip.File, destination string) error {
-	// Check if file paths are not vulnerable to Zip Slip
+	// Check if file paths are not vulnerable to Zip Slip.
 	filePath := filepath.Join(destination, f.Name)
 	if !strings.HasPrefix(filePath, filepath.Clean(destination)+string(os.PathSeparator)) {
 		return fmt.Errorf("invalid file path: %s", filePath)
 	}
 
-	// Create a destination file for unzipped content
+	// Create a destination file for unzipped content.
 	destinationFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 	if err != nil {
 		return err
 	}
 	defer destinationFile.Close()
 
-	// Unzip the content of a file and copy it to the destination file
+	// Unzip the content of a file and copy it to the destination file.
 	zippedFile, err := f.Open()
 	if err != nil {
 		return err

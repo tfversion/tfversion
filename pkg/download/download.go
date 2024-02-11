@@ -26,27 +26,27 @@ func ensureDownloadDirectoryExists(downloadLocation string) {
 	}
 }
 
-// Download downloads the Terraform release zip file for the given version, OS and architecture
+// Download downloads the Terraform release zip file for the given version, OS and architecture.
 func Download(version, goos, goarch string) (string, error) {
 	downloadLocation := getDownloadLocation()
 	ensureDownloadDirectoryExists(downloadLocation)
 
-	// Construct the download URL based on the version and the OS and architecture
+	// Construct the download URL based on the version and the OS and architecture.
 	downloadURL := fmt.Sprintf("%s/%s/terraform_%s_%s_%s.zip", TerraformReleasesUrl, version, version, goos, goarch)
 
 	var err error
 	for attempt := 1; attempt <= MaxRetries; attempt++ {
 		if err = downloadWithRetry(downloadURL, downloadLocation, version, goos, goarch); err == nil {
 			fmt.Printf("Terraform %s downloaded successfully\n", version)
-			// Return the path to the downloaded file
+			// Return the path to the downloaded file.
 			return fmt.Sprintf("%s/terraform_%s_%s_%s.zip", downloadLocation, version, goos, goarch), nil
 		}
 
 		fmt.Printf("Attempt %d failed: %s\n", attempt, err)
-		time.Sleep(time.Second * RetryTimeInSeconds) // sleep before retrying
+		time.Sleep(time.Second * RetryTimeInSeconds) // sleep before retrying.
 	}
 
-	// If we got here, we failed to download Terraform after MaxRetries attempts
+	// If we got here, we failed to download Terraform after MaxRetries attempts.
 	return "", fmt.Errorf("failed to download Terraform after %d attempts: %s", MaxRetries, err)
 }
 
