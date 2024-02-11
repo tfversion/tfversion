@@ -7,4 +7,6 @@ const (
 	MaxRetries = 3
 	// RetryTimeInSeconds is the time to wait before retrying a download
 	RetryTimeInSeconds = 2
+	// DownloadDir is the directory where tfversion downloads Terraform releases
+	DownloadDir = ".tfversion"
 )

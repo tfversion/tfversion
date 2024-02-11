@@ -6,12 +6,13 @@ import (
 	"runtime"
 
 	"github.com/bschaatsbergen/tfversion/pkg/download"
+	"github.com/bschaatsbergen/tfversion/pkg/install"
 	"github.com/spf13/cobra"
 )
 
 const (
 	installExample = "# Install a specific Terraform version\n" +
-		"tfversion install 1.7.1"
+		"tfversion install 1.7.3"
 )
 
 var (
@@ -25,7 +26,7 @@ var (
 				fmt.Println("See 'tfversion install -h' for help and examples")
 				os.Exit(1)
 			}
-			install(args[0])
+			installA(args[0])
 		},
 	}
 )
@@ -34,8 +35,23 @@ func init() {
 	rootCmd.AddCommand(installCmd)
 }
 
-func install(version string) {
-	err := download.DownloadTerraform(version, runtime.GOOS, runtime.GOARCH)
+func installA(version string) {
+	// Download the Terraform release
+	zipFile, err := download.Download(version, runtime.GOOS, runtime.GOARCH)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	// Unzip the downloaded Terraform release
+	err = install.UnzipRelease(zipFile, "/home/bruno/.tfversion/")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	// Clean up the downloaded zip file after unzipping
+	err = download.DeleteDownloadedRelease(zipFile)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
