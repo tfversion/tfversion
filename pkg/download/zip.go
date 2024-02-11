@@ -1,4 +1,4 @@
-package install
+package download
 
 import (
 	"archive/zip"
