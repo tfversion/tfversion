@@ -33,7 +33,7 @@ var (
 
 func init() {
 	rootCmd.AddCommand(installCmd)
-	rootCmd.Flags().BoolVar(&latest, "latest", false, "install the latest stable Terraform version")
+	installCmd.Flags().BoolVar(&latest, "latest", false, "install the latest stable Terraform version")
 }
 
 func execInstall(version string) {
