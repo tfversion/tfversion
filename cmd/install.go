@@ -57,8 +57,15 @@ func execInstall(version string) {
 			os.Exit(1)
 		}
 
+		// Find user home directory
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
 		// Unzip the downloaded Terraform release
-		err = download.UnzipRelease(zipFile, fmt.Sprintf("/home/bruno/.tfversion/%s", version))
+		err = download.UnzipRelease(zipFile, fmt.Sprintf("%s/.tfversion/%s", homeDir, version))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
