@@ -58,7 +58,7 @@ func execInstall(version string) {
 		}
 
 		// Unzip the downloaded Terraform release
-		err = download.UnzipRelease(zipFile, fmt.Sprintf("/home/bruno/.tfversion/%s", version))
+		err = download.UnzipRelease(zipFile, fmt.Sprintf("/Users/bruno/.tfversion/%s", version))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
