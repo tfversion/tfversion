@@ -9,8 +9,8 @@ import (
 
 // DeleteVersion deletes the given Terraform version from directory that tfversion downloads Terraform releases to.
 func DeleteVersionFromDownloadLocation(version string) error {
-	downloadLocation := download.GetDownloadLocation()
-	err := os.RemoveAll(fmt.Sprintf("%s/%s", downloadLocation, version))
+	installLocation := download.GetInstallLocation(version)
+	err := os.RemoveAll(installLocation)
 	if err != nil {
 		return fmt.Errorf("deleting Terraform version failed: %s", err)
 	}
