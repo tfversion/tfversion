@@ -26,6 +26,10 @@ func GetDownloadLocation() string {
 	return filepath.Join(user, DownloadDir)
 }
 
+func GetInstallLocation(version string) string {
+	return filepath.Join(GetDownloadLocation(), version)
+}
+
 func ensureDownloadDirectoryExists(downloadLocation string) {
 	if _, err := os.Stat(downloadLocation); os.IsNotExist(err) {
 		err := os.Mkdir(downloadLocation, 0755)
