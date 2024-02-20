@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/bschaatsbergen/tfversion/pkg/download"
 	"github.com/spf13/cobra"
+	"golang.org/x/net/html"
 )
 
 const (
@@ -39,7 +41,35 @@ func init() {
 }
 
 func execList() {
-	// TODO: parse content from download.TerraformReleasesUrl
+	resp, err := http.Get(download.TerraformReleasesUrl)
+	if err != nil {
+		fmt.Printf("failed to download Terraform: %s", err)
+		os.Exit(1)
+	}
+	defer resp.Body.Close()
+
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		fmt.Printf("failed to parse available versions: %s", err)
+		os.Exit(1)
+	}
+
+	var availableVersions []string
+	var processAllVersions func(*html.Node)
+	processAllVersions = func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "a" {
+			availableVersions = append(availableVersions, n.FirstChild.Data)
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			processAllVersions(c)
+		}
+	}
+
+	processAllVersions(doc)
+
+	for _, v := range availableVersions {
+		fmt.Println(v)
+	}
 }
 
 func execListInstalled() {
@@ -47,6 +77,7 @@ func execListInstalled() {
 	installedVersions, err := os.ReadDir(installLocation)
 	if err != nil {
 		fmt.Printf("error listing installation directory: %s", err)
+		os.Exit(1)
 	}
 	for _, v := range installedVersions {
 		fmt.Println(v.Name())
