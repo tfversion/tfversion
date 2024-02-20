@@ -10,7 +10,7 @@ import (
 
 func InstallVersion(version string) {
 	if download.IsAlreadyDownloaded(version) {
-		fmt.Printf("Terraform version %s is already installed", version)
+		fmt.Printf("Terraform version %s is already installed\n", version)
 		os.Exit(0)
 	}
 
