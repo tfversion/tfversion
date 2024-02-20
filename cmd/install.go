@@ -3,9 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"runtime"
 
-	"github.com/bschaatsbergen/tfversion/pkg/download"
+	"github.com/bschaatsbergen/tfversion/pkg/install"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +37,7 @@ var (
 					os.Exit(1)
 				}
 			}
-			execInstall(args[0])
+			install.InstallVersion(args[0])
 		},
 	}
 )
@@ -46,30 +45,4 @@ var (
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.Flags().BoolVar(&latest, "latest", false, "install the latest stable Terraform version")
-}
-
-func execInstall(version string) {
-	if !download.IsAlreadyDownloaded(version) {
-		// Download the Terraform release
-		zipFile, err := download.Download(version, runtime.GOOS, runtime.GOARCH)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		// Unzip the downloaded Terraform release
-		installLocation := download.GetInstallLocation(version)
-		err = download.UnzipRelease(zipFile, installLocation)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		// Clean up the downloaded zip file after unzipping
-		err = download.DeleteDownloadedRelease(zipFile)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-	}
 }
