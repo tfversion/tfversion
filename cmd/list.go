@@ -39,7 +39,7 @@ func init() {
 }
 
 func execList() {
-	// TODO
+	// TODO: parse content from download.TerraformReleasesUrl
 }
 
 func execListInstalled() {
