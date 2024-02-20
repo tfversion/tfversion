@@ -24,7 +24,11 @@ var (
 		Short:   "Lists all Terraform versions",
 		Example: listExample,
 		Run: func(cmd *cobra.Command, args []string) {
-			execList()
+			if installed {
+				execListInstalled()
+			} else {
+				execList()
+			}
 		},
 	}
 )
@@ -35,6 +39,10 @@ func init() {
 }
 
 func execList() {
+	// TODO
+}
+
+func execListInstalled() {
 	installLocation := download.GetDownloadLocation()
 	installedVersions, err := os.ReadDir(installLocation)
 	if err != nil {
