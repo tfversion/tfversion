@@ -32,8 +32,8 @@ brews:
     license: "MIT"
     skip_upload: auto
     commit_author:
-      name: Bruno Schaatsbergen
-      email: git@tfversion.com
+      name: tfversion
+      email: contact@tfversion.com
     folder: Formula
     install: |-
       bin.install "tfversion"
