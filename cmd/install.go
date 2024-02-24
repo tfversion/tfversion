@@ -14,7 +14,11 @@ const (
 		"\n" +
 		"\n" +
 		"# Install the latest stable Terraform version\n" +
-		"tfversion install --latest"
+		"tfversion install --latest" +
+		"\n" +
+		"\n" +
+		"# Install the latest pre-release Terraform version\n" +
+		"tfversion install --latest --pre-release"
 )
 
 var (
@@ -24,6 +28,11 @@ var (
 		Use:     "install",
 		Short:   "Installs a given Terraform version",
 		Example: installExample,
+		PreRun: func(cmd *cobra.Command, args []string) {
+			if preRelease && !latest {
+				cmd.MarkFlagRequired("latest")
+			}
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 			if latest {
 				if len(args) != 0 {
