@@ -10,4 +10,5 @@ const (
 	// DownloadDir is the directory where tfversion downloads Terraform releases.
 	DownloadDir         = ".tfversion"
 	TerraformBinaryName = "terraform"
+	BinaryDir           = "bin"
 )

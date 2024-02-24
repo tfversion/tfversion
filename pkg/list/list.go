@@ -18,7 +18,9 @@ func ListInstalledVersions() {
 		os.Exit(1)
 	}
 	for _, v := range installedVersions {
-		fmt.Println(v.Name())
+		if v.Name() != download.BinaryDir {
+			fmt.Println(v.Name())
+		}
 	}
 }
 
