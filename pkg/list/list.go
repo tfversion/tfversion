@@ -10,6 +10,7 @@ import (
 	"golang.org/x/net/html"
 )
 
+// GetInstalledVersions returns the installed Terraform versions from the `~/.tfversion` directory
 func GetInstalledVersions() []string {
 	installLocation := download.GetDownloadLocation()
 	installedVersions, err := os.ReadDir(installLocation)
@@ -40,6 +41,7 @@ func GetInstalledVersions() []string {
 	return reversedVersions
 }
 
+// GetAvailableVersions returns the available Terraform versions from the official Terraform releases page
 func GetAvailableVersions() []string {
 	resp, err := http.Get(download.TerraformReleasesUrl)
 	if err != nil {
@@ -56,6 +58,11 @@ func GetAvailableVersions() []string {
 
 	availableVersions := parseAvailableVersions(doc)
 	return availableVersions
+}
+
+// IsPreReleaseVersion checks if the given version is a Terraform pre-release version
+func IsPreReleaseVersion(version string) bool {
+	return strings.Contains(version, "-alpha") || strings.Contains(version, "-beta") || strings.Contains(version, "-rc")
 }
 
 func parseAvailableVersions(n *html.Node) []string {

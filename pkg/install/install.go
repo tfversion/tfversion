@@ -9,13 +9,21 @@ import (
 	"github.com/tfversion/tfversion/pkg/list"
 )
 
+// InstallVersion installs the specified Terraform version or one of the latest versions
 func InstallVersion(version string, latest bool, preRelease bool) {
 	// Get the available Terraform versions
 	versions := list.GetAvailableVersions()
 
-	// Set the version to the latest if the `latest` flag is set
+	// Set the version to the latest stable version if the `latest` flag is set
+	// or to the latest pre-release version if the `latest` and `pre-release` flags are set
 	if latest {
-		version = versions[0]
+		for _, v := range versions {
+			if !preRelease && list.IsPreReleaseVersion(v) {
+				continue
+			}
+			version = v
+			break
+		}
 	}
 
 	if download.IsAlreadyDownloaded(version) {
