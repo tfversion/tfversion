@@ -20,8 +20,8 @@ var (
 		Example: useExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 1 {
-				fmt.Println("error: provide a Terraform version to install")
-				fmt.Println("See 'tfversion install -h' for help and examples")
+				fmt.Println("error: provide a Terraform version to activate")
+				fmt.Println("See 'tfversion use -h' for help and examples")
 				os.Exit(1)
 			}
 			use.UseVersion(args[0])
