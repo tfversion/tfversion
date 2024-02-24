@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/bschaatsbergen/tfversion/pkg/download"
 )
@@ -16,19 +17,39 @@ func UseVersion(version string) {
 
 	// create the bin directory if it doesn't exist
 	targetPath := filepath.Join(download.GetDownloadLocation(), download.BinaryDir)
-	os.Mkdir(targetPath, 0755)
+	_, err := os.Stat(targetPath)
+	if os.IsNotExist(err) {
+		err = os.Mkdir(targetPath, 0755)
+		if err != nil {
+			fmt.Printf("Error creating directory: %v\n", err)
+			os.Exit(1)
+		}
+	}
 
 	// ensure the symlink target is available
 	binaryTargetPath := filepath.Join(targetPath, download.TerraformBinaryName)
-	_, err := os.Lstat(binaryTargetPath)
+	_, err = os.Lstat(binaryTargetPath)
 	if err == nil {
-		os.Remove(binaryTargetPath)
+		err = os.Remove(binaryTargetPath)
+		if err != nil {
+			fmt.Printf("Error removing symlink: %v\n", err)
+			os.Exit(1)
+		}
 	}
 
 	// create the symlink
 	binaryVersionPath := download.GetBinaryLocation(version)
-	os.Symlink(binaryVersionPath, binaryTargetPath)
+	err = os.Symlink(binaryVersionPath, binaryTargetPath)
+	if err != nil {
+		fmt.Printf("Error creating symlink: %v\n", err)
+		os.Exit(1)
+	}
 
 	fmt.Printf("Activated Terraform version %s\n", version)
-	fmt.Printf("Please run `export PATH=%s:$PATH` to make this version available in your shell\n", targetPath)
+
+	// inform the user that they need to update their PATH
+	path := os.Getenv("PATH")
+	if !strings.Contains(path, targetPath) {
+		fmt.Printf("Please run `export PATH=%s:$PATH` to make this version available in your shell\n", targetPath)
+	}
 }
