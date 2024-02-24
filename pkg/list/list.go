@@ -27,8 +27,8 @@ func ListInstalledVersions() {
 
 	// Check if there are any versions
 	if len(versionNames) == 0 {
-		fmt.Println("No installed versions found.")
-		return
+		fmt.Println("error listing installed versions: no versions found")
+		os.Exit(1)
 	}
 
 	// Reverse the order of versionNames to show the latest version first
