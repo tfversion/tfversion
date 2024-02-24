@@ -7,9 +7,26 @@ import (
 	"strings"
 
 	"github.com/tfversion/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/list"
 )
 
-func UseVersion(version string) {
+// UseVersion activates the specified Terraform version or one of the latest versions
+func UseVersion(version string, latest bool, preRelease bool) {
+	// Get the available Terraform versions
+	versions := list.GetAvailableVersions()
+
+	// Set the version to the latest stable version if the `latest` flag is set
+	// or to the latest pre-release version if the `latest` and `pre-release` flags are set
+	if latest {
+		for _, v := range versions {
+			if !preRelease && list.IsPreReleaseVersion(v) {
+				continue
+			}
+			version = v
+			break
+		}
+	}
+
 	if !download.IsAlreadyDownloaded(version) {
 		fmt.Printf("Terraform version %s is not installed\n", version)
 		os.Exit(0)
