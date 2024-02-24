@@ -9,7 +9,7 @@ A simple tool to manage Terraform versions.
 To install tfversion using brew, simply run:
 
 ```sh
-brew install tfversion
+brew install tfversion/tap/tfversion
 ```
 
 ## Binaries
