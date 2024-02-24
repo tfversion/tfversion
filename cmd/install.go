@@ -19,6 +19,7 @@ const (
 
 var (
 	latest     bool
+	preRelease bool
 	installCmd = &cobra.Command{
 		Use:     "install",
 		Short:   "Installs a given Terraform version",
@@ -30,14 +31,15 @@ var (
 					fmt.Println("See 'tfversion install -h' for help and examples")
 					os.Exit(1)
 				}
+				install.InstallVersion("", latest, preRelease)
 			} else {
 				if len(args) != 1 {
 					fmt.Println("error: provide a Terraform version to install")
 					fmt.Println("See 'tfversion install -h' for help and examples")
 					os.Exit(1)
 				}
+				install.InstallVersion(args[0], latest, preRelease)
 			}
-			install.InstallVersion(args[0])
 		},
 	}
 )
@@ -45,4 +47,5 @@ var (
 func init() {
 	rootCmd.AddCommand(installCmd)
 	installCmd.Flags().BoolVar(&latest, "latest", false, "install the latest stable Terraform version")
+	installCmd.Flags().BoolVar(&preRelease, "pre-release", false, "When used with --latest, install the latest pre-release version")
 }

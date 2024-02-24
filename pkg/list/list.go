@@ -10,7 +10,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-func ListInstalledVersions() {
+func GetInstalledVersions() []string {
 	installLocation := download.GetDownloadLocation()
 	installedVersions, err := os.ReadDir(installLocation)
 	if err != nil {
@@ -32,12 +32,15 @@ func ListInstalledVersions() {
 	}
 
 	// Reverse the order of versionNames to show the latest version first
-	for i := len(versionNames) - 1; i >= 0; i-- {
-		fmt.Println(versionNames[i])
+	reversedVersions := make([]string, len(versionNames))
+	for i := 0; i < len(versionNames); i++ {
+		reversedVersions[i] = versionNames[len(versionNames)-1-i]
 	}
+
+	return reversedVersions
 }
 
-func ListAvailableVersions() {
+func GetAvailableVersions() []string {
 	resp, err := http.Get(download.TerraformReleasesUrl)
 	if err != nil {
 		fmt.Printf("failed to download Terraform: %s", err)
@@ -52,9 +55,7 @@ func ListAvailableVersions() {
 	}
 
 	availableVersions := parseAvailableVersions(doc)
-	for _, v := range availableVersions {
-		fmt.Println(v)
-	}
+	return availableVersions
 }
 
 func parseAvailableVersions(n *html.Node) []string {

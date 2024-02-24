@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/tfversion/tfversion/pkg/list"
 )
@@ -22,9 +24,16 @@ var (
 		Example: listExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			if installed {
-				list.ListInstalledVersions()
+				installedVersions := list.GetInstalledVersions()
+				for _, version := range installedVersions {
+					fmt.Println(version)
+				}
+
 			} else {
-				list.ListAvailableVersions()
+				availableVersions := list.GetAvailableVersions()
+				for _, v := range availableVersions {
+					fmt.Println(v)
+				}
 			}
 		},
 	}

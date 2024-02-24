@@ -6,9 +6,18 @@ import (
 	"runtime"
 
 	"github.com/tfversion/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/list"
 )
 
-func InstallVersion(version string) {
+func InstallVersion(version string, latest bool, preRelease bool) {
+	// Get the available Terraform versions
+	versions := list.GetAvailableVersions()
+
+	// Set the version to the latest if the `latest` flag is set
+	if latest {
+		version = versions[0]
+	}
+
 	if download.IsAlreadyDownloaded(version) {
 		fmt.Printf("Terraform version %s is already installed\n", version)
 		os.Exit(0)
