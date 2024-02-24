@@ -11,9 +11,8 @@ import (
 
 // IsAlreadyDownloaded checks if the given Terraform version is already downloaded and unzipped.
 func IsAlreadyDownloaded(version string) bool {
-	downloadLocation := GetDownloadLocation()
-	filePath := filepath.Join(downloadLocation, version, TerraformBinaryName)
-	_, err := os.Stat(filePath)
+	binaryPath := GetBinaryLocation(version)
+	_, err := os.Stat(binaryPath)
 	return !os.IsNotExist(err)
 }
 
@@ -28,6 +27,10 @@ func GetDownloadLocation() string {
 
 func GetInstallLocation(version string) string {
 	return filepath.Join(GetDownloadLocation(), version)
+}
+
+func GetBinaryLocation(version string) string {
+	return filepath.Join(GetInstallLocation(version), TerraformBinaryName)
 }
 
 func ensureDownloadDirectoryExists(downloadLocation string) {
