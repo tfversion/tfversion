@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bschaatsbergen/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/download"
 )
 
 // DeleteVersion deletes the given Terraform version from directory that tfversion downloads Terraform releases to.

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bschaatsbergen/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/download"
 )
 
 func UseVersion(version string) {

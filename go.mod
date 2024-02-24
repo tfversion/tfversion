@@ -1,4 +1,4 @@
-module github.com/bschaatsbergen/tfversion
+module github.com/tfversion/tfversion
 
 go 1.21.4
 

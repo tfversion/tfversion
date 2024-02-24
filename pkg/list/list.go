@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bschaatsbergen/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/download"
 	"golang.org/x/net/html"
 )
 

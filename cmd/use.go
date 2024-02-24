@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bschaatsbergen/tfversion/pkg/use"
 	"github.com/spf13/cobra"
+	"github.com/tfversion/tfversion/pkg/use"
 )
 
 const (

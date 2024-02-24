@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bschaatsbergen/tfversion/pkg/uninstall"
 	"github.com/spf13/cobra"
+	"github.com/tfversion/tfversion/pkg/uninstall"
 )
 
 const (
