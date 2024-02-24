@@ -28,7 +28,7 @@ func UseVersion(version string, latest bool, preRelease bool) {
 	}
 
 	if !download.IsAlreadyDownloaded(version) {
-		fmt.Printf("Terraform version %s is not installed\n", version)
+		fmt.Printf("Terraform version %s not found, run `tfversion install %s` to install\n", version, version)
 		os.Exit(0)
 	}
 
