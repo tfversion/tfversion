@@ -17,10 +17,23 @@ func ListInstalledVersions() {
 		fmt.Printf("error listing installation directory: %s", err)
 		os.Exit(1)
 	}
+
+	var versionNames []string
 	for _, v := range installedVersions {
 		if v.Name() != download.BinaryDir {
-			fmt.Println(v.Name())
+			versionNames = append(versionNames, v.Name())
 		}
+	}
+
+	// Check if there are any versions
+	if len(versionNames) == 0 {
+		fmt.Println("error listing installed versions: no versions found")
+		os.Exit(1)
+	}
+
+	// Reverse the order of versionNames to show the latest version first
+	for i := len(versionNames) - 1; i >= 0; i-- {
+		fmt.Println(versionNames[i])
 	}
 }
 

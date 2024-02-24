@@ -21,7 +21,7 @@ func UseVersion(version string) {
 	if os.IsNotExist(err) {
 		err = os.Mkdir(targetPath, 0755)
 		if err != nil {
-			fmt.Printf("Error creating directory: %v\n", err)
+			fmt.Printf("error creating directory: %v\n", err)
 			os.Exit(1)
 		}
 	}
@@ -32,7 +32,7 @@ func UseVersion(version string) {
 	if err == nil {
 		err = os.Remove(binaryTargetPath)
 		if err != nil {
-			fmt.Printf("Error removing symlink: %v\n", err)
+			fmt.Printf("error removing symlink: %v\n", err)
 			os.Exit(1)
 		}
 	}
@@ -41,7 +41,7 @@ func UseVersion(version string) {
 	binaryVersionPath := download.GetBinaryLocation(version)
 	err = os.Symlink(binaryVersionPath, binaryTargetPath)
 	if err != nil {
-		fmt.Printf("Error creating symlink: %v\n", err)
+		fmt.Printf("error creating symlink: %v\n", err)
 		os.Exit(1)
 	}
 
