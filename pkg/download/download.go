@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 // IsAlreadyDownloaded checks if the given Terraform version is already downloaded and unzipped.
@@ -53,7 +55,7 @@ func Download(version, goos, goarch string) (string, error) {
 	var err error
 	for attempt := 1; attempt <= MaxRetries; attempt++ {
 		if err = downloadWithRetry(downloadURL, downloadLocation, version, goos, goarch); err == nil {
-			fmt.Printf("Terraform %s downloaded successfully\n", version)
+			fmt.Printf("Terraform %s downloaded successfully\n", color.BlueString(version))
 			// Return the path to the downloaded file.
 			return fmt.Sprintf("%s/terraform_%s_%s_%s.zip", downloadLocation, version, goos, goarch), nil
 		}
