@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/tfversion/tfversion/pkg/uninstall"
 )
@@ -20,7 +21,7 @@ const (
 var (
 	uninstallCmd = &cobra.Command{
 		Use:     "uninstall",
-		Short:   "uninstalls a given Terraform version",
+		Short:   "Uninstalls a given Terraform version",
 		Example: uninstallExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 1 {
@@ -43,5 +44,5 @@ func execUninstall(version string) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Printf("Terraform %s uninstalled successfully\n", version)
+	fmt.Printf("Terraform %s uninstalled successfully\n", color.BlueString(version))
 }
