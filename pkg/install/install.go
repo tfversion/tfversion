@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/fatih/color"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/list"
 )
@@ -27,7 +28,7 @@ func InstallVersion(version string, latest bool, preRelease bool) {
 	}
 
 	if download.IsAlreadyDownloaded(version) {
-		fmt.Printf("Terraform version %s is already installed\n", version)
+		fmt.Printf("Terraform version %s is already installed\n", color.BlueString(version))
 		os.Exit(0)
 	}
 

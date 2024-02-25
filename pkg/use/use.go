@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/list"
 )
@@ -43,6 +44,15 @@ func UseVersion(version string, latest bool, preRelease bool) {
 		}
 	}
 
+	// inform the user that they need to update their PATH
+	path := os.Getenv("PATH")
+	if !strings.Contains(path, targetPath) {
+		fmt.Println("Error: tfversion not found in your shell PATH.")
+		fmt.Printf("Please run %s to make this version available in your shell\n", color.BlueString("`export PATH=%s:$PATH`", targetPath))
+		fmt.Println("Additionally, consider adding this line to your shell profile (e.g., .bashrc, .zshrc) for persistence.")
+		os.Exit(1)
+	}
+
 	// ensure the symlink target is available
 	binaryTargetPath := filepath.Join(targetPath, download.TerraformBinaryName)
 	_, err = os.Lstat(binaryTargetPath)
@@ -62,11 +72,5 @@ func UseVersion(version string, latest bool, preRelease bool) {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Activated Terraform version %s\n", version)
-
-	// inform the user that they need to update their PATH
-	path := os.Getenv("PATH")
-	if !strings.Contains(path, targetPath) {
-		fmt.Printf("Please run `export PATH=%s:$PATH` to make this version available in your shell\n", targetPath)
-	}
+	fmt.Printf("Activated Terraform version %s\n", color.BlueString(version))
 }

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/tfversion/tfversion/pkg/list"
 )
@@ -26,13 +27,13 @@ var (
 			if installed {
 				installedVersions := list.GetInstalledVersions()
 				for _, version := range installedVersions {
-					fmt.Println(version)
+					fmt.Println(color.BlueString(version))
 				}
 
 			} else {
 				availableVersions := list.GetAvailableVersions()
 				for _, v := range availableVersions {
-					fmt.Println(v)
+					fmt.Println(color.BlueString(v))
 				}
 			}
 		},
