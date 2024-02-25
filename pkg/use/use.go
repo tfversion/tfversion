@@ -29,7 +29,7 @@ func UseVersion(version string, latest bool, preRelease bool) {
 	}
 
 	if !download.IsAlreadyDownloaded(version) {
-		fmt.Printf("Terraform version %s not found, run `tfversion install %s` to install\n", version, version)
+		fmt.Printf("Terraform version %s not found, run %s to install\n", color.BlueString(version), color.BlueString(fmt.Sprintf("`tfversion install %s`", version)))
 		os.Exit(0)
 	}
 
@@ -49,7 +49,7 @@ func UseVersion(version string, latest bool, preRelease bool) {
 	if !strings.Contains(path, targetPath) {
 		fmt.Println("Error: tfversion not found in your shell PATH.")
 		fmt.Printf("Please run %s to make this version available in your shell\n", color.BlueString("`export PATH=%s:$PATH`", targetPath))
-		fmt.Println("Additionally, consider adding this line to your shell profile (e.g., .bashrc, .zshrc) for persistence.")
+		fmt.Println("Additionally, consider adding this line to your shell profile (e.g., .bashrc, .zshrc or fish config) for persistence.")
 		os.Exit(1)
 	}
 

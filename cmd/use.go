@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/tfversion/tfversion/pkg/use"
 )
@@ -34,15 +35,15 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			if latest {
 				if len(args) != 0 {
-					fmt.Println("error: 'latest' flag does not require specifying a Terraform version")
-					fmt.Println("See 'tfversion use -h' for help and examples")
+					fmt.Println("error: `--latest` flag does not require specifying a Terraform version")
+					fmt.Printf("See %s for help and examples\n", color.BlueString("`tfversion install -h`"))
 					os.Exit(1)
 				}
 				use.UseVersion("", latest, preRelease)
 			} else {
 				if len(args) != 1 {
 					fmt.Println("error: provide a Terraform version to activate")
-					fmt.Println("See 'tfversion use -h' for help and examples")
+					fmt.Printf("See %s for help and examples\n", color.BlueString("`tfversion install -h`"))
 					os.Exit(1)
 				}
 				use.UseVersion(args[0], latest, preRelease)
