@@ -1,6 +1,6 @@
-# tfversion
+# tfversion/cli
 
-[![Release](https://github.com/tfversion/tfversion/actions/workflows/goreleaser.yaml/badge.svg)](https://github.com/tfversion/tfversion/actions/workflows/goreleaser.yaml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/tfversion/tfversion) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/tfversion/tfversion/latest) [![Go Reference](https://pkg.go.dev/badge/github.com/tfversion/tfversion.svg)](https://pkg.go.dev/github.com/tfversion/tfversion)
+<img src="https://storage.googleapis.com/gopherizeme.appspot.com/gophers/cd3d0af2ddb25c058f511d6927b3ef701c30a493.png" width="125" height="125"> [![Release](https://github.com/tfversion/tfversion/actions/workflows/goreleaser.yaml/badge.svg)](https://github.com/tfversion/tfversion/actions/workflows/goreleaser.yaml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/tfversion/tfversion) [![Go Reference](https://pkg.go.dev/badge/github.com/tfversion/tfversion.svg)](https://pkg.go.dev/github.com/tfversion/tfversion)
 
 A simple tool to manage Terraform versions.
 
