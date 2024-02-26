@@ -33,13 +33,21 @@ var (
 				installedVersions := list.GetInstalledVersions()
 				limit := min(maxResults, len(installedVersions))
 				for _, version := range installedVersions[:limit] {
-					fmt.Println(color.BlueString(version))
+					if list.IsPreReleaseVersion(version) {
+						fmt.Println(color.YellowString(version))
+					} else {
+						fmt.Println(color.BlueString(version))
+					}
 				}
 			} else {
 				availableVersions := list.GetAvailableVersions()
 				limit := min(maxResults, len(availableVersions))
-				for _, v := range availableVersions[:limit] {
-					fmt.Println(color.BlueString(v))
+				for _, version := range availableVersions[:limit] {
+					if list.IsPreReleaseVersion(version) {
+						fmt.Println(color.YellowString(version))
+					} else {
+						fmt.Println(color.BlueString(version))
+					}
 				}
 			}
 		},
