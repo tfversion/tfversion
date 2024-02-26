@@ -31,12 +31,14 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			if installed {
 				installedVersions := list.GetInstalledVersions()
-				for _, version := range installedVersions[:maxResults] {
+				limit := min(maxResults, len(installedVersions))
+				for _, version := range installedVersions[:limit] {
 					fmt.Println(color.BlueString(version))
 				}
 			} else {
 				availableVersions := list.GetAvailableVersions()
-				for _, v := range availableVersions[:maxResults] {
+				limit := min(maxResults, len(availableVersions))
+				for _, v := range availableVersions[:limit] {
 					fmt.Println(color.BlueString(v))
 				}
 			}
