@@ -26,10 +26,34 @@ Using `tfversion` is very simple.
 tfversion install 1.7.0
 ```
 
+### Install the latest stable version
+
+```sh
+tfversion install --latest
+```
+
+### Install the latest pre-release version
+
+```sh
+tfversion install --latest --pre-release
+```
+
 ### Use a specific version
 
 ```sh
 tfversion use 1.7.0
+```
+
+### Use the latest stable version
+
+```sh
+tfversion use --latest
+```
+
+### Use the latest pre-release version
+
+```sh
+tfversion use --latest --pre-release
 ```
 
 ### List versions
@@ -42,6 +66,12 @@ tfversion list
 
 ```sh
 tfversion list --installed
+```
+
+### Uninstall a specific version
+
+```sh
+tfversion uninstall 1.7.4
 ```
 
 ## Contributing
