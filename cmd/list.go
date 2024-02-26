@@ -47,5 +47,5 @@ var (
 func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.Flags().BoolVar(&installed, "installed", false, "list the installed Terraform versions")
-	listCmd.Flags().IntVar(&maxResults, "max-results", 10, "maximum number of versions to list")
+	listCmd.Flags().IntVar(&maxResults, "max-results", 500, "maximum number of versions to list")
 }
