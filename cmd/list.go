@@ -5,6 +5,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/list"
 )
 
@@ -33,7 +34,7 @@ var (
 				installedVersions := list.GetInstalledVersions()
 				limit := min(maxResults, len(installedVersions))
 				for _, version := range installedVersions[:limit] {
-					if list.IsPreReleaseVersion(version) {
+					if helpers.IsPreReleaseVersion(version) {
 						fmt.Println(color.YellowString(version))
 					} else {
 						fmt.Println(color.BlueString(version))
@@ -43,7 +44,7 @@ var (
 				availableVersions := list.GetAvailableVersions()
 				limit := min(maxResults, len(availableVersions))
 				for _, version := range availableVersions[:limit] {
-					if list.IsPreReleaseVersion(version) {
+					if helpers.IsPreReleaseVersion(version) {
 						fmt.Println(color.YellowString(version))
 					} else {
 						fmt.Println(color.BlueString(version))

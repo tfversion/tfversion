@@ -60,11 +60,6 @@ func GetAvailableVersions() []string {
 	return availableVersions
 }
 
-// IsPreReleaseVersion checks if the given version is a Terraform pre-release version
-func IsPreReleaseVersion(version string) bool {
-	return strings.Contains(version, "-alpha") || strings.Contains(version, "-beta") || strings.Contains(version, "-rc")
-}
-
 func parseAvailableVersions(n *html.Node) []string {
 	var availableVersions []string
 

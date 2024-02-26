@@ -8,6 +8,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/tfversion/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/list"
 )
 
@@ -20,7 +21,7 @@ func UseVersion(version string, latest bool, preRelease bool) {
 	// or to the latest pre-release version if the `latest` and `pre-release` flags are set
 	if latest {
 		for _, v := range versions {
-			if !preRelease && list.IsPreReleaseVersion(v) {
+			if !preRelease && helpers.IsPreReleaseVersion(v) {
 				continue
 			}
 			version = v
@@ -29,7 +30,11 @@ func UseVersion(version string, latest bool, preRelease bool) {
 	}
 
 	if !download.IsAlreadyDownloaded(version) {
-		fmt.Printf("Terraform version %s not found, run %s to install\n", color.BlueString(version), color.BlueString(fmt.Sprintf("`tfversion install %s`", version)))
+		if helpers.IsPreReleaseVersion(version) {
+			fmt.Printf("Terraform version %s not found, run %s to install\n", color.YellowString(version), color.BlueString(fmt.Sprintf("`tfversion install %s`", version)))
+		} else {
+			fmt.Printf("Terraform version %s not found, run %s to install\n", color.BlueString(version), color.BlueString(fmt.Sprintf("`tfversion install %s`", version)))
+		}
 		os.Exit(0)
 	}
 
@@ -72,5 +77,9 @@ func UseVersion(version string, latest bool, preRelease bool) {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Activated Terraform version %s\n", color.BlueString(version))
+	if helpers.IsPreReleaseVersion(version) {
+		fmt.Printf("Activated Terraform version %s\n", color.YellowString(version))
+	} else {
+		fmt.Printf("Activated Terraform version %s\n", color.BlueString(version))
+	}
 }

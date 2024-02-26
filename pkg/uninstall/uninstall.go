@@ -6,6 +6,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/tfversion/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/helpers"
 )
 
 func deleteVersionFromDownloadLocation(version string) error {
@@ -17,17 +18,21 @@ func deleteVersionFromDownloadLocation(version string) error {
 	return nil
 }
 
-func Uninstall(version string) error {
+func Uninstall(version string) {
 	if !checkIfBinaryIsPresent(version) {
-		fmt.Printf("Terraform version %s is not installed\n", color.RedString(version))
+		if helpers.IsPreReleaseVersion(version) {
+			fmt.Printf("Terraform version %s is not installed\n", color.YellowString(version))
+		} else {
+			fmt.Printf("Terraform version %s is not installed\n", color.BlueString(version))
+		}
 		os.Exit(1)
 	}
 
 	err := deleteVersionFromDownloadLocation(version)
 	if err != nil {
-		return err
+		fmt.Printf("error deleting Terraform version: %s\n", err)
+		os.Exit(1)
 	}
-	return nil
 }
 
 func checkIfBinaryIsPresent(version string) bool {
