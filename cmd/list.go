@@ -13,13 +13,18 @@ const (
 		"tfversion list" +
 		"\n" +
 		"\n" +
+		"# List more available versions\n" +
+		"tfversion list --max-results=20\n" +
+		"\n" +
+		"\n" +
 		"# List all installed Terraform versions\n" +
 		"tfversion list --installed"
 )
 
 var (
-	installed bool
-	listCmd   = &cobra.Command{
+	installed  bool
+	maxResults int
+	listCmd    = &cobra.Command{
 		Use:     "list",
 		Short:   "Lists all Terraform versions",
 		Example: listExample,
@@ -29,10 +34,9 @@ var (
 				for _, version := range installedVersions {
 					fmt.Println(color.BlueString(version))
 				}
-
 			} else {
 				availableVersions := list.GetAvailableVersions()
-				for _, v := range availableVersions {
+				for _, v := range availableVersions[:maxResults] {
 					fmt.Println(color.BlueString(v))
 				}
 			}
@@ -43,4 +47,5 @@ var (
 func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.Flags().BoolVar(&installed, "installed", false, "list the installed Terraform versions")
+	listCmd.Flags().IntVar(&maxResults, "max-results", 10, "maximum number of versions to list")
 }
