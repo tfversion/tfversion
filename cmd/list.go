@@ -13,7 +13,7 @@ const (
 		"tfversion list" +
 		"\n" +
 		"\n" +
-		"# List more available versions\n" +
+		"# Limit the number of results\n" +
 		"tfversion list --max-results=20\n" +
 		"\n" +
 		"\n" +
