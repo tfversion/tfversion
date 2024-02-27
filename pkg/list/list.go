@@ -86,8 +86,9 @@ func FindLatestVersion(preRelease bool) string {
 			continue
 		}
 		foundVersion = v
+		break
 	}
-	if foundVersion == "" {
+	if len(foundVersion) == 0 {
 		fmt.Println("No versions found")
 		os.Exit(1)
 	}
