@@ -16,9 +16,19 @@ brew install tfversion/tap/tfversion
 
 You can download the [latest binary](https://github.com/tfversion/tfversion/releases/latest) for Linux, MacOS, and Windows.
 
+## Configuring your shell
+
+To ensure that `tfversion` is always available in your shell, append the following line to your shell profile (e.g., .bashrc, .zshrc or fish config):
+
+```sh
+export PATH="$HOME/.tfversion/bin:$PATH"
+```
+
+We prefer to not automagically modify your shell profile, and therefore leave this step to you.
+
 ## Examples
 
-Using `tfversion` is very simple.
+`tfversion` is user-friendly and easy to use. For more information, please visit the [documentation](https://tfversion.xyz/use.html).
 
 ### Install a specific version
 
