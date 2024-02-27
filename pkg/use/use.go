@@ -69,11 +69,13 @@ func UseVersion(version string) {
 	}
 }
 
+// UseLatestVersion activates the latest Terraform version
 func UseLatestVersion(preRelease bool) {
 	version := list.FindLatestVersion(preRelease)
 	UseVersion(version)
 }
 
+// UseRequiredVersion activates the required Terraform version from the .tf files in the current directory
 func UseRequiredVersion() {
 	terraformFiles := helpers.FindTerraformFiles()
 	if len(terraformFiles) == 0 {
