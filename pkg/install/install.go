@@ -54,6 +54,10 @@ func InstallLatestVersion(preRelease bool) {
 // InstallRequiredVersion installs the required Terraform version from the .tf files in the current directory
 func InstallRequiredVersion() {
 	terraformFiles := helpers.FindTerraformFiles()
+	if len(terraformFiles) == 0 {
+		fmt.Println("No Terraform files found in current directory")
+		os.Exit(1)
+	}
 	for _, file := range terraformFiles {
 		requiredVersion := helpers.FindRequiredVersionInFile(file)
 		if requiredVersion != "" {
@@ -61,5 +65,4 @@ func InstallRequiredVersion() {
 			break
 		}
 	}
-	fmt.Println("No required version found in .tf files in the current directory")
 }
