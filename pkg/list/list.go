@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/tfversion/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/helpers"
 	"golang.org/x/net/html"
 )
 
@@ -74,4 +75,21 @@ func parseAvailableVersions(n *html.Node) []string {
 	}
 
 	return availableVersions
+}
+
+// FindLatestVersion finds the latest available Terraform version (or pre-release version)
+func FindLatestVersion(preRelease bool) string {
+	versions := GetAvailableVersions()
+	var foundVersion string
+	for _, v := range versions {
+		if !preRelease && helpers.IsPreReleaseVersion(v) {
+			continue
+		}
+		foundVersion = v
+	}
+	if foundVersion == "" {
+		fmt.Println("No versions found")
+		os.Exit(1)
+	}
+	return foundVersion
 }
