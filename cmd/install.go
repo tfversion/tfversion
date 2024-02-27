@@ -36,7 +36,7 @@ var (
 		Example: installExample,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			if preRelease && !latest {
-				cmd.MarkFlagRequired("latest")
+				_ = cmd.MarkFlagRequired("latest")
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
