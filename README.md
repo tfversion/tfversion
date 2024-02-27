@@ -38,6 +38,12 @@ tfversion install --latest
 tfversion install --latest --pre-release
 ```
 
+### Install the required version for your current directory
+
+```sh
+tfversion install --required
+```
+
 ### Use a specific version
 
 ```sh

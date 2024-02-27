@@ -12,27 +12,12 @@ import (
 )
 
 // InstallVersion installs the specified Terraform version or one of the latest versions
-func InstallVersion(version string, latest bool, preRelease bool) {
-	// Get the available Terraform versions
-	versions := list.GetAvailableVersions()
-
-	// Set the version to the latest stable version if the `latest` flag is set
-	// or to the latest pre-release version if the `latest` and `pre-release` flags are set
-	if latest {
-		for _, v := range versions {
-			if !preRelease && helpers.IsPreReleaseVersion(v) {
-				continue
-			}
-			version = v
-			break
-		}
-	}
-
+func InstallVersion(version string) {
 	if download.IsAlreadyDownloaded(version) {
 		if helpers.IsPreReleaseVersion(version) {
 			fmt.Printf("Terraform version %s is already installed\n", color.YellowString(version))
 		} else {
-			fmt.Printf("Terraform version %s downloaded successfully\n", color.BlueString(version))
+			fmt.Printf("Terraform version %s is already installed\n", color.BlueString(version))
 		}
 		os.Exit(0)
 	}
@@ -58,4 +43,23 @@ func InstallVersion(version string, latest bool, preRelease bool) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+// InstallLatestVersion installs the latest Terraform version
+func InstallLatestVersion(preRelease bool) {
+	version := list.FindLatestVersion(preRelease)
+	InstallVersion(version)
+}
+
+// InstallRequiredVersion installs the required Terraform version from the .tf files in the current directory
+func InstallRequiredVersion() {
+	terraformFiles := helpers.FindTerraformFiles()
+	for _, file := range terraformFiles {
+		requiredVersion := helpers.FindRequiredVersionInFile(file)
+		if requiredVersion != "" {
+			InstallVersion(requiredVersion)
+			break
+		}
+	}
+	fmt.Println("No required version found in .tf files in the current directory")
 }
