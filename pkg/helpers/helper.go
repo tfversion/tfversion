@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/hashicorp/go-version"
 )
 
 // IsPreReleaseVersion checks if the given version is a Terraform pre-release version
@@ -15,18 +17,28 @@ func IsPreReleaseVersion(version string) bool {
 
 // FindRequiredVersionInFile finds the required Terraform version in a given .tf file (using required_version = ">= x.x.x")
 // TODO: improve logic by using go-version/constraint?
-func FindRequiredVersionInFile(filepath string) string {
+func FindRequiredVersionInFile(filepath string, availableVersions []string) string {
 	bytes, err := os.ReadFile(filepath)
 	if err != nil {
 		fmt.Printf("Unable to find version number in file: %s", filepath)
 		return ""
 	}
-	re := regexp.MustCompile(`required_version\s*=\s*">=? ?(\d+\.\d+\.\d+)"`)
+
+	re := regexp.MustCompile(`required_version\s?=\s?"([^"]+)"`)
 	match := re.FindStringSubmatch(string(bytes))
 	if len(match) == 0 {
 		return ""
 	}
-	return match[1]
+
+	for _, v := range availableVersions {
+		testVersion, _ := version.NewVersion(v)
+		constraints, _ := version.NewConstraint(match[1])
+		if constraints.Check(testVersion) {
+			return v
+		}
+	}
+
+	return ""
 }
 
 // FindTerraformFiles finds all .tf files in the current directory (module)

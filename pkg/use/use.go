@@ -82,8 +82,10 @@ func UseRequiredVersion() {
 		fmt.Println("No Terraform files found in current directory")
 		os.Exit(1)
 	}
+
+	availableVersions := list.GetAvailableVersions()
 	for _, file := range terraformFiles {
-		requiredVersion := helpers.FindRequiredVersionInFile(file)
+		requiredVersion := helpers.FindRequiredVersionInFile(file, availableVersions)
 		if requiredVersion != "" {
 			UseVersion(requiredVersion)
 			break
