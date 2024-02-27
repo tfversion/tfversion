@@ -16,7 +16,6 @@ func IsPreReleaseVersion(version string) bool {
 }
 
 // FindRequiredVersionInFile finds the required Terraform version in a given .tf file (using required_version = ">= x.x.x")
-// TODO: improve logic by using go-version/constraint?
 func FindRequiredVersionInFile(filepath string, availableVersions []string) string {
 	bytes, err := os.ReadFile(filepath)
 	if err != nil {
