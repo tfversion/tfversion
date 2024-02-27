@@ -62,6 +62,12 @@ tfversion use --latest
 tfversion use --latest --pre-release
 ```
 
+### Use the required version for your current directory
+
+```sh
+tfversion use --required
+```
+
 ### List versions
 
 ```sh
