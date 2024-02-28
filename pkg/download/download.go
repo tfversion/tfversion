@@ -59,7 +59,7 @@ func Download(version, goos, goarch string) (string, error) {
 			if helpers.IsPreReleaseVersion(version) {
 				fmt.Printf("Terraform version %s downloaded successfully\n", color.YellowString(version))
 			} else {
-				fmt.Printf("Terraform version %s downloaded successfully\n", color.BlueString(version))
+				fmt.Printf("Terraform version %s downloaded successfully\n", color.CyanString(version))
 			}
 			// Return the path to the downloaded file.
 			return fmt.Sprintf("%s/terraform_%s_%s_%s.zip", downloadLocation, version, goos, goarch), nil

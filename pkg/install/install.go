@@ -17,7 +17,7 @@ func InstallVersion(version string) {
 		if helpers.IsPreReleaseVersion(version) {
 			fmt.Printf("Terraform version %s is already installed\n", color.YellowString(version))
 		} else {
-			fmt.Printf("Terraform version %s is already installed\n", color.BlueString(version))
+			fmt.Printf("Terraform version %s is already installed\n", color.CyanString(version))
 		}
 		os.Exit(0)
 	}

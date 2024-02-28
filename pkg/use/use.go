@@ -16,9 +16,9 @@ import (
 func UseVersion(version string) {
 	if !download.IsAlreadyDownloaded(version) {
 		if helpers.IsPreReleaseVersion(version) {
-			fmt.Printf("Terraform version %s not found, run %s to install\n", color.YellowString(version), color.BlueString(fmt.Sprintf("`tfversion install %s`", version)))
+			fmt.Printf("Terraform version %s not found, run %s to install\n", color.YellowString(version), color.CyanString(fmt.Sprintf("`tfversion install %s`", version)))
 		} else {
-			fmt.Printf("Terraform version %s not found, run %s to install\n", color.BlueString(version), color.BlueString(fmt.Sprintf("`tfversion install %s`", version)))
+			fmt.Printf("Terraform version %s not found, run %s to install\n", color.CyanString(version), color.CyanString(fmt.Sprintf("`tfversion install %s`", version)))
 		}
 		os.Exit(0)
 	}
@@ -38,7 +38,7 @@ func UseVersion(version string) {
 	path := os.Getenv("PATH")
 	if !strings.Contains(path, targetPath) {
 		fmt.Println("Error: tfversion not found in your shell PATH.")
-		fmt.Printf("Please run %s to make this version available in your shell\n", color.BlueString("`export PATH=%s:$PATH`", targetPath))
+		fmt.Printf("Please run %s to make this version available in your shell\n", color.CyanString("`export PATH=%s:$PATH`", targetPath))
 		fmt.Println("Additionally, consider adding this line to your shell profile (e.g., .bashrc, .zshrc or fish config) for persistence.")
 		os.Exit(1)
 	}
@@ -65,7 +65,7 @@ func UseVersion(version string) {
 	if helpers.IsPreReleaseVersion(version) {
 		fmt.Printf("Activated Terraform version %s\n", color.YellowString(version))
 	} else {
-		fmt.Printf("Activated Terraform version %s\n", color.BlueString(version))
+		fmt.Printf("Activated Terraform version %s\n", color.CyanString(version))
 	}
 }
 
