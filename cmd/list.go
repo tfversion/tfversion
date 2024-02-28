@@ -37,7 +37,7 @@ var (
 					if helpers.IsPreReleaseVersion(version) {
 						fmt.Println(color.YellowString(version))
 					} else {
-						fmt.Println(color.BlueString(version))
+						fmt.Println(color.CyanString(version))
 					}
 				}
 			} else {
@@ -47,7 +47,7 @@ var (
 					if helpers.IsPreReleaseVersion(version) {
 						fmt.Println(color.YellowString(version))
 					} else {
-						fmt.Println(color.BlueString(version))
+						fmt.Println(color.CyanString(version))
 					}
 				}
 			}

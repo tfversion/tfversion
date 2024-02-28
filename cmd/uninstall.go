@@ -26,7 +26,7 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 1 {
 				fmt.Println("error: provide a Terraform version to uninstall")
-				fmt.Printf("See %s for help and examples\n", color.BlueString("`tfversion install -h`"))
+				fmt.Printf("See %s for help and examples\n", color.CyanString("`tfversion install -h`"))
 				os.Exit(1)
 			}
 			uninstall.Uninstall(args[0])

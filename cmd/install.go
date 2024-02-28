@@ -45,7 +45,7 @@ var (
 			if latest {
 				if len(args) != 0 {
 					fmt.Println("error: `--latest` flag does not require specifying a Terraform version")
-					fmt.Printf("See %s for help and examples\n", color.BlueString("`tfversion install -h`"))
+					fmt.Printf("See %s for help and examples\n", color.CyanString("`tfversion install -h`"))
 					os.Exit(1)
 				}
 				install.InstallLatestVersion(preRelease)
@@ -56,7 +56,7 @@ var (
 			if required {
 				if len(args) != 0 {
 					fmt.Println("error: `--required` flag does not require specifying a Terraform version")
-					fmt.Printf("See %s for help and examples\n", color.BlueString("`tfversion install -h`"))
+					fmt.Printf("See %s for help and examples\n", color.CyanString("`tfversion install -h`"))
 					os.Exit(1)
 				}
 				install.InstallRequiredVersion()
@@ -66,7 +66,7 @@ var (
 			// install specific version
 			if len(args) != 1 {
 				fmt.Println("error: provide a Terraform version to install")
-				fmt.Printf("See %s for help and examples\n", color.BlueString("`tfversion install -h`"))
+				fmt.Printf("See %s for help and examples\n", color.CyanString("`tfversion install -h`"))
 				os.Exit(1)
 			}
 			install.InstallVersion(args[0])
