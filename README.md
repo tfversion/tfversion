@@ -96,6 +96,13 @@ tfversion list --installed
 tfversion uninstall 1.7.4
 ```
 
+### Create and use an alias
+
+```sh
+tfversion alias default 1.7.4
+tfversion use default
+```
+
 ## Contributing
 
 Contributions are highly appreciated and always welcome.
