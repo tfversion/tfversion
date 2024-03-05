@@ -26,7 +26,7 @@ func ColoredInstallHelper(version string) string {
 
 // ExitWithError prints an error message and exits with status code 1
 func ExitWithError(message string, err error) {
-	fmt.Printf("error: %s: %s\n", message, err)
+	fmt.Printf("%s %s: %s\n", color.HiRedString("error:"), message, err)
 	os.Exit(1)
 }
 
