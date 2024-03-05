@@ -78,6 +78,13 @@ tfversion use --latest --pre-release
 tfversion use --required
 ```
 
+### Create and use an alias
+
+```sh
+tfversion alias default 1.7.4
+tfversion use default
+```
+
 ### List versions
 
 ```sh
@@ -90,17 +97,16 @@ tfversion list
 tfversion list --installed
 ```
 
+### List aliased versions
+
+```sh
+tfversion list --aliases
+```
+
 ### Uninstall a specific version
 
 ```sh
 tfversion uninstall 1.7.4
-```
-
-### Create and use an alias
-
-```sh
-tfversion alias default 1.7.4
-tfversion use default
 ```
 
 ## Contributing
