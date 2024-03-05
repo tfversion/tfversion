@@ -2,10 +2,8 @@ package install
 
 import (
 	"fmt"
-	"os"
 	"runtime"
 
-	"github.com/fatih/color"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/list"
@@ -14,34 +12,27 @@ import (
 // InstallVersion installs the specified Terraform version or one of the latest versions
 func InstallVersion(version string) {
 	if download.IsAlreadyDownloaded(version) {
-		if helpers.IsPreReleaseVersion(version) {
-			fmt.Printf("Terraform version %s is already installed\n", color.YellowString(version))
-		} else {
-			fmt.Printf("Terraform version %s is already installed\n", color.CyanString(version))
-		}
-		os.Exit(0)
+		err := fmt.Errorf("terraform version %s is already installed", helpers.ColoredVersion(version))
+		helpers.ExitWithError("installing", err)
 	}
 
 	// Download the Terraform release
 	zipFile, err := download.Download(version, runtime.GOOS, runtime.GOARCH)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		helpers.ExitWithError("downloading", err)
 	}
 
 	// Unzip the downloaded Terraform release
 	installLocation := download.GetInstallLocation(version)
 	err = download.UnzipRelease(zipFile, installLocation)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		helpers.ExitWithError("unzipping", err)
 	}
 
 	// Clean up the downloaded zip file after unzipping
 	err = download.DeleteDownloadedRelease(zipFile)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		helpers.ExitWithError("cleaning up", err)
 	}
 }
 
@@ -53,24 +44,28 @@ func InstallLatestVersion(preRelease bool) {
 
 // InstallRequiredVersion installs the required Terraform version from the .tf files in the current directory
 func InstallRequiredVersion() {
-	terraformFiles := helpers.FindTerraformFiles()
-	if len(terraformFiles) == 0 {
-		fmt.Println("error: no Terraform files found in current directory")
-		os.Exit(1)
+	terraformFiles, err := helpers.FindTerraformFiles()
+	if err != nil {
+		helpers.ExitWithError("finding Terraform files", err)
 	}
 
 	var foundVersion string
 	availableVersions := list.GetAvailableVersions()
 	for _, file := range terraformFiles {
-		requiredVersion := helpers.FindRequiredVersionInFile(file, availableVersions)
+		requiredVersion, err := helpers.FindRequiredVersionInFile(file, availableVersions)
+		if err != nil {
+			helpers.ExitWithError("finding required version", err)
+		}
+
 		if requiredVersion != "" {
 			foundVersion = requiredVersion
+			break
 		}
 	}
 
 	if len(foundVersion) == 0 {
-		fmt.Println("error: no required version found in current directory")
-		os.Exit(1)
+		err := fmt.Errorf("no required version found in current directory")
+		helpers.ExitWithError("installing required version", err)
 	}
 
 	InstallVersion(foundVersion)

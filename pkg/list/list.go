@@ -20,8 +20,7 @@ func GetAliasedVersions() []string {
 	// find all aliases
 	aliasedVersions, err := os.ReadDir(aliasLocation)
 	if err != nil {
-		fmt.Printf("error listing alias directory: %s", err)
-		os.Exit(1)
+		helpers.ExitWithError("listing alias directory", err)
 	}
 
 	// resolve the symlinks to get the target versions
@@ -34,8 +33,8 @@ func GetAliasedVersions() []string {
 
 	// check if there are any versions
 	if len(versionNames) == 0 {
-		fmt.Println("error listing installed versions: no versions found")
-		os.Exit(1)
+		err := fmt.Errorf("no versions found")
+		helpers.ExitWithError("listing alias directory", err)
 	}
 
 	return versionNames
@@ -46,8 +45,7 @@ func GetInstalledVersions() []string {
 	installLocation := download.GetDownloadLocation()
 	installedVersions, err := os.ReadDir(installLocation)
 	if err != nil {
-		fmt.Printf("error listing versions directory: %s", err)
-		os.Exit(1)
+		helpers.ExitWithError("listing versions directory", err)
 	}
 
 	var versionNames []string
@@ -57,8 +55,8 @@ func GetInstalledVersions() []string {
 
 	// check if there are any versions
 	if len(versionNames) == 0 {
-		fmt.Println("error listing installed versions: no versions found")
-		os.Exit(1)
+		err := fmt.Errorf("no versions found")
+		helpers.ExitWithError("listing installed versions", err)
 	}
 
 	// Reverse the order of versionNames to show the latest version first
@@ -74,15 +72,13 @@ func GetInstalledVersions() []string {
 func GetAvailableVersions() []string {
 	resp, err := http.Get(download.TerraformReleasesUrl)
 	if err != nil {
-		fmt.Printf("failed to download Terraform: %s", err)
-		os.Exit(1)
+		helpers.ExitWithError("getting Terraform releases page", err)
 	}
 	defer resp.Body.Close()
 
 	doc, err := html.Parse(resp.Body)
 	if err != nil {
-		fmt.Printf("failed to parse available versions: %s", err)
-		os.Exit(1)
+		helpers.ExitWithError("parsing HTML", err)
 	}
 
 	availableVersions := parseAvailableVersions(doc)
@@ -116,9 +112,11 @@ func FindLatestVersion(preRelease bool) string {
 		foundVersion = v
 		break
 	}
+
 	if len(foundVersion) == 0 {
-		fmt.Println("No versions found")
-		os.Exit(1)
+		err := fmt.Errorf("no versions found")
+		helpers.ExitWithError("finding latest version", err)
 	}
+
 	return foundVersion
 }

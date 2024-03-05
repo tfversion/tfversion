@@ -26,22 +26,18 @@ func UseVersion(versionOrAlias string) {
 
 	// check if the version is installed
 	if !download.IsAlreadyDownloaded(version) {
-		if helpers.IsPreReleaseVersion(version) {
-			fmt.Printf("Terraform version %s not found, run %s to install\n", color.YellowString(version), color.CyanString(fmt.Sprintf("`tfversion install %s`", version)))
-		} else {
-			fmt.Printf("Terraform version %s not found, run %s to install\n", color.CyanString(version), color.CyanString(fmt.Sprintf("`tfversion install %s`", version)))
-		}
-		os.Exit(0)
+		err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
+		helpers.ExitWithError("using", err)
 	}
 
 	useLocation := getUseLocation()
 
 	// inform the user that they need to update their PATH
 	path := os.Getenv("PATH")
-	if !strings.Contains(path, useLocation) {
-		fmt.Println("Error: tfversion not found in your shell PATH.")
+	if strings.Contains(path, useLocation) {
+		fmt.Printf("%s not found in your shell PATH\n", color.CyanString(useLocation))
 		fmt.Printf("Please run %s to make this version available in your shell\n", color.CyanString("`export PATH=%s:$PATH`", useLocation))
-		fmt.Println("Additionally, consider adding this line to your shell profile (e.g., .bashrc, .zshrc or fish config) for persistence.")
+		fmt.Printf("Additionally, consider adding this line to your shell profile (e.g., .bashrc, .zshrc or fish config) for persistence.\n")
 		os.Exit(1)
 	}
 
@@ -51,8 +47,7 @@ func UseVersion(versionOrAlias string) {
 	if err == nil {
 		err = os.Remove(binaryTargetPath)
 		if err != nil {
-			fmt.Printf("error removing symlink: %v\n", err)
-			os.Exit(1)
+			helpers.ExitWithError("removing symlink", err)
 		}
 	}
 
@@ -60,15 +55,10 @@ func UseVersion(versionOrAlias string) {
 	binaryVersionPath := download.GetBinaryLocation(version)
 	err = os.Symlink(binaryVersionPath, binaryTargetPath)
 	if err != nil {
-		fmt.Printf("error creating symlink: %v\n", err)
-		os.Exit(1)
+		helpers.ExitWithError("creating symlink", err)
 	}
 
-	if helpers.IsPreReleaseVersion(version) {
-		fmt.Printf("Activated Terraform version %s\n", color.YellowString(version))
-	} else {
-		fmt.Printf("Activated Terraform version %s\n", color.CyanString(version))
-	}
+	fmt.Printf("Activated Terraform version %s\n", helpers.ColoredVersion(version))
 }
 
 // UseLatestVersion activates the latest Terraform version
@@ -79,35 +69,44 @@ func UseLatestVersion(preRelease bool) {
 
 // UseRequiredVersion activates the required Terraform version from the .tf files in the current directory
 func UseRequiredVersion() {
-	terraformFiles := helpers.FindTerraformFiles()
-	if len(terraformFiles) == 0 {
-		fmt.Println("No Terraform files found in current directory")
-		os.Exit(1)
+	terraformFiles, err := helpers.FindTerraformFiles()
+	if err != nil {
+		helpers.ExitWithError("finding Terraform files", err)
 	}
 
+	var foundVersion string
 	availableVersions := list.GetAvailableVersions()
 	for _, file := range terraformFiles {
-		requiredVersion := helpers.FindRequiredVersionInFile(file, availableVersions)
+		requiredVersion, err := helpers.FindRequiredVersionInFile(file, availableVersions)
+		if err != nil {
+			helpers.ExitWithError("finding required version", err)
+		}
+
 		if requiredVersion != "" {
-			UseVersion(requiredVersion)
+			foundVersion = requiredVersion
 			break
 		}
 	}
+
+	if len(foundVersion) == 0 {
+		err := fmt.Errorf("no required version found in current directory")
+		helpers.ExitWithError("installing required version", err)
+	}
+
+	UseVersion(foundVersion)
 }
 
 func getUseLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Printf("error getting user home directory: %s", err)
-		os.Exit(1)
+		helpers.ExitWithError("user home directory", err)
 	}
 
 	useLocation := filepath.Join(user, download.ApplicationDir, download.UseDir)
 	if _, err := os.Stat(useLocation); os.IsNotExist(err) {
 		err := os.Mkdir(useLocation, 0755)
 		if err != nil {
-			fmt.Printf("error creating use directory: %s", err)
-			os.Exit(1)
+			helpers.ExitWithError("creating use directory", err)
 		}
 	}
 
