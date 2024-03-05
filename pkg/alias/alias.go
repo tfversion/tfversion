@@ -20,8 +20,10 @@ func AliasVersion(alias string, version string) {
 		os.Exit(0)
 	}
 
+	aliasLocation := getAliasLocation()
+
 	// delete existing alias symlink, we consider it non-destructive anyways since you can easily restore it
-	aliasPath := filepath.Join(download.GetDownloadLocation(), alias)
+	aliasPath := filepath.Join(aliasLocation, alias)
 	_, err := os.Lstat(aliasPath)
 	if err == nil {
 		err = os.RemoveAll(aliasPath)
@@ -44,4 +46,23 @@ func AliasVersion(alias string, version string) {
 	} else {
 		fmt.Printf("Aliased Terraform version %s as %s\n", color.CyanString(version), color.CyanString(alias))
 	}
+}
+
+func getAliasLocation() string {
+	user, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("error getting user home directory: %s", err)
+		os.Exit(1)
+	}
+
+	aliasLocation := filepath.Join(user, download.ApplicationDir, download.AliasesDir)
+	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
+		err := os.Mkdir(aliasLocation, 0755)
+		if err != nil {
+			fmt.Printf("error creating alias directory: %s", err)
+			os.Exit(1)
+		}
+	}
+
+	return aliasLocation
 }
