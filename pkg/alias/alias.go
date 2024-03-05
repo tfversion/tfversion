@@ -20,7 +20,7 @@ func AliasVersion(alias string, version string) {
 		os.Exit(0)
 	}
 
-	aliasLocation := getAliasLocation()
+	aliasLocation := GetAliasLocation()
 
 	// delete existing alias symlink, we consider it non-destructive anyways since you can easily restore it
 	aliasPath := filepath.Join(aliasLocation, alias)
@@ -48,7 +48,7 @@ func AliasVersion(alias string, version string) {
 	}
 }
 
-func getAliasLocation() string {
+func GetAliasLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Printf("error getting user home directory: %s", err)

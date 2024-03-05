@@ -19,36 +19,38 @@ const (
 		"\n" +
 		"\n" +
 		"# List all installed Terraform versions\n" +
-		"tfversion list --installed"
+		"tfversion list --installed\n" +
+		"\n" +
+		"\n" +
+		"# List all aliased Terraform versions\n" +
+		"tfversion list --aliased"
 )
 
 var (
 	installed  bool
+	aliases    bool
 	maxResults int
 	listCmd    = &cobra.Command{
 		Use:     "list",
 		Short:   "Lists all Terraform versions",
 		Example: listExample,
 		Run: func(cmd *cobra.Command, args []string) {
+
+			var versions []string
 			if installed {
-				installedVersions := list.GetInstalledVersions()
-				limit := min(maxResults, len(installedVersions))
-				for _, version := range installedVersions[:limit] {
-					if helpers.IsPreReleaseVersion(version) {
-						fmt.Println(color.YellowString(version))
-					} else {
-						fmt.Println(color.CyanString(version))
-					}
-				}
+				versions = list.GetInstalledVersions()
+			} else if aliases {
+				versions = list.GetAliasedVersions()
 			} else {
-				availableVersions := list.GetAvailableVersions()
-				limit := min(maxResults, len(availableVersions))
-				for _, version := range availableVersions[:limit] {
-					if helpers.IsPreReleaseVersion(version) {
-						fmt.Println(color.YellowString(version))
-					} else {
-						fmt.Println(color.CyanString(version))
-					}
+				versions = list.GetAvailableVersions()
+			}
+
+			limit := min(maxResults, len(versions))
+			for _, version := range versions[:limit] {
+				if helpers.IsPreReleaseVersion(version) {
+					fmt.Println(color.YellowString(version))
+				} else {
+					fmt.Println(color.CyanString(version))
 				}
 			}
 		},
@@ -58,5 +60,6 @@ var (
 func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.Flags().BoolVar(&installed, "installed", false, "list the installed Terraform versions")
+	listCmd.Flags().BoolVar(&aliases, "aliases", false, "list the aliased Terraform versions")
 	listCmd.Flags().IntVar(&maxResults, "max-results", 500, "maximum number of versions to list")
 }

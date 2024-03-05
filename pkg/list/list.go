@@ -4,19 +4,49 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
+	"github.com/tfversion/tfversion/pkg/alias"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"golang.org/x/net/html"
 )
 
-// GetInstalledVersions returns the installed Terraform versions from the `~/.tfversion` directory
+// GetAliasedVersions returns the aliased Terraform versions from the `~/.tfversion/aliases` directory
+func GetAliasedVersions() []string {
+	aliasLocation := alias.GetAliasLocation()
+
+	// find all aliases
+	aliasedVersions, err := os.ReadDir(aliasLocation)
+	if err != nil {
+		fmt.Printf("error listing alias directory: %s", err)
+		os.Exit(1)
+	}
+
+	// resolve the symlinks to get the target versions
+	var versionNames []string
+	for _, v := range aliasedVersions {
+		resolvePath, _ := filepath.EvalSymlinks(filepath.Join(aliasLocation, v.Name()))
+		_, targetVersion := filepath.Split(resolvePath)
+		versionNames = append(versionNames, fmt.Sprintf("%s -> %s", v.Name(), targetVersion))
+	}
+
+	// check if there are any versions
+	if len(versionNames) == 0 {
+		fmt.Println("error listing installed versions: no versions found")
+		os.Exit(1)
+	}
+
+	return versionNames
+}
+
+// GetInstalledVersions returns the installed Terraform versions from the `~/.tfversion/versions` directory
 func GetInstalledVersions() []string {
 	installLocation := download.GetDownloadLocation()
 	installedVersions, err := os.ReadDir(installLocation)
 	if err != nil {
-		fmt.Printf("error listing installation directory: %s", err)
+		fmt.Printf("error listing versions directory: %s", err)
 		os.Exit(1)
 	}
 
@@ -25,7 +55,7 @@ func GetInstalledVersions() []string {
 		versionNames = append(versionNames, v.Name())
 	}
 
-	// Check if there are any versions
+	// check if there are any versions
 	if len(versionNames) == 0 {
 		fmt.Println("error listing installed versions: no versions found")
 		os.Exit(1)
