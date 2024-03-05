@@ -7,13 +7,24 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/tfversion/tfversion/pkg/alias"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/list"
 )
 
 // UseVersion activates the specified Terraform version or one of the latest versions
-func UseVersion(version string) {
+func UseVersion(versionOrAlias string) {
+
+	// find the version (via alias or directly)
+	var version string
+	if alias.IsAlias(versionOrAlias) {
+		version = alias.GetVersion(versionOrAlias)
+	} else {
+		version = versionOrAlias
+	}
+
+	// check if the version is installed
 	if !download.IsAlreadyDownloaded(version) {
 		if helpers.IsPreReleaseVersion(version) {
 			fmt.Printf("Terraform version %s not found, run %s to install\n", color.YellowString(version), color.CyanString(fmt.Sprintf("`tfversion install %s`", version)))

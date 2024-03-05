@@ -10,6 +10,7 @@ import (
 	"github.com/tfversion/tfversion/pkg/helpers"
 )
 
+// AliasVersion creates a symlink to the specified Terraform version.
 func AliasVersion(alias string, version string) {
 	if !download.IsAlreadyDownloaded(version) {
 		if helpers.IsPreReleaseVersion(version) {
@@ -48,6 +49,7 @@ func AliasVersion(alias string, version string) {
 	}
 }
 
+// GetAliasLocation returns the directory where tfversion stores the aliases.
 func GetAliasLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
@@ -65,4 +67,19 @@ func GetAliasLocation() string {
 	}
 
 	return aliasLocation
+}
+
+// IsAlias checks if the given alias is valid.
+func IsAlias(alias string) bool {
+	aliasPath := filepath.Join(GetAliasLocation(), alias)
+	_, err := os.Stat(aliasPath)
+	return !os.IsNotExist(err)
+}
+
+// GetVersion returns the Terraform version for the given alias.
+func GetVersion(alias string) string {
+	aliasLocation := GetAliasLocation()
+	resolvePath, _ := filepath.EvalSymlinks(filepath.Join(aliasLocation, alias))
+	_, targetVersion := filepath.Split(resolvePath)
+	return targetVersion
 }
