@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fatih/color"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
 )
@@ -13,12 +12,8 @@ import (
 // AliasVersion creates a symlink to the specified Terraform version.
 func AliasVersion(alias string, version string) {
 	if !download.IsAlreadyDownloaded(version) {
-		if helpers.IsPreReleaseVersion(version) {
-			fmt.Printf("Terraform version %s not found, run %s to install\n", color.YellowString(version), color.CyanString(fmt.Sprintf("`tfversion install %s`", version)))
-		} else {
-			fmt.Printf("Terraform version %s not found, run %s to install\n", color.CyanString(version), color.CyanString(fmt.Sprintf("`tfversion install %s`", version)))
-		}
-		os.Exit(0)
+		err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
+		helpers.ExitWithError("aliasing", err)
 	}
 
 	aliasLocation := GetAliasLocation()
@@ -29,8 +24,7 @@ func AliasVersion(alias string, version string) {
 	if err == nil {
 		err = os.RemoveAll(aliasPath)
 		if err != nil {
-			fmt.Printf("error removing symlink: %v\n", err)
-			os.Exit(1)
+			helpers.ExitWithError("error removing symlink", err)
 		}
 	}
 
@@ -38,31 +32,24 @@ func AliasVersion(alias string, version string) {
 	binaryVersionPath := download.GetInstallLocation(version)
 	err = os.Symlink(binaryVersionPath, aliasPath)
 	if err != nil {
-		fmt.Printf("error creating symlink: %v\n", err)
-		os.Exit(1)
+		helpers.ExitWithError("creating symlink", err)
 	}
 
-	if helpers.IsPreReleaseVersion(version) {
-		fmt.Printf("Aliased Terraform version %s as %s\n", color.YellowString(version), color.YellowString(alias))
-	} else {
-		fmt.Printf("Aliased Terraform version %s as %s\n", color.CyanString(version), color.CyanString(alias))
-	}
+	fmt.Printf("Aliased Terraform version %s as %s\n", helpers.ColoredVersion(version), helpers.ColoredVersion(alias))
 }
 
 // GetAliasLocation returns the directory where tfversion stores the aliases.
 func GetAliasLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Printf("error getting user home directory: %s", err)
-		os.Exit(1)
+		helpers.ExitWithError("error getting user home directory", err)
 	}
 
 	aliasLocation := filepath.Join(user, download.ApplicationDir, download.AliasesDir)
 	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
 		err := os.Mkdir(aliasLocation, 0755)
 		if err != nil {
-			fmt.Printf("error creating alias directory: %s", err)
-			os.Exit(1)
+			helpers.ExitWithError("error creating alias directory", err)
 		}
 	}
 

@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/fatih/color"
 	"github.com/tfversion/tfversion/pkg/helpers"
 )
 
@@ -23,16 +22,14 @@ func IsAlreadyDownloaded(version string) bool {
 func GetDownloadLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Printf("error getting user home directory: %s", err)
-		os.Exit(1)
+		helpers.ExitWithError("error getting user home directory", err)
 	}
 
 	downloadLocation := filepath.Join(user, ApplicationDir, VersionsDir)
 	if _, err := os.Stat(downloadLocation); os.IsNotExist(err) {
 		err := os.Mkdir(downloadLocation, 0755)
 		if err != nil {
-			fmt.Printf("error creating download directory: %s", err)
-			os.Exit(1)
+			helpers.ExitWithError("error creating download directory", err)
 		}
 	}
 
@@ -53,26 +50,21 @@ func GetBinaryLocation(version string) string {
 func Download(version, goos, goarch string) (string, error) {
 	downloadLocation := GetDownloadLocation()
 
-	// Construct the download URL based on the version and the OS and architecture.
+	// construct the download URL based on the version and the OS and architecture
 	downloadURL := fmt.Sprintf("%s/%s/terraform_%s_%s_%s.zip", TerraformReleasesUrl, version, version, goos, goarch)
 
 	var err error
 	for attempt := 1; attempt <= MaxRetries; attempt++ {
 		if err = downloadWithRetry(downloadURL, downloadLocation, version, goos, goarch); err == nil {
-			if helpers.IsPreReleaseVersion(version) {
-				fmt.Printf("Terraform version %s downloaded successfully\n", color.YellowString(version))
-			} else {
-				fmt.Printf("Terraform version %s downloaded successfully\n", color.CyanString(version))
-			}
-			// Return the path to the downloaded file.
+			fmt.Printf("Terraform version %s downloaded successfully\n", helpers.ColoredVersion(version))
 			return fmt.Sprintf("%s/terraform_%s_%s_%s.zip", downloadLocation, version, goos, goarch), nil
 		}
 
 		fmt.Printf("Attempt %d failed: %s\n", attempt, err)
-		time.Sleep(time.Second * RetryTimeInSeconds) // sleep before retrying.
+		time.Sleep(time.Second * RetryTimeInSeconds)
 	}
 
-	// If we got here, we failed to download Terraform after MaxRetries attempts.
+	// if we got here, we failed to download Terraform after MaxRetries attempts
 	return "", fmt.Errorf("failed to download Terraform after %d attempts: %s", MaxRetries, err)
 }
 

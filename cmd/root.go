@@ -1,12 +1,11 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
 	"strings"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"github.com/tfversion/tfversion/pkg/helpers"
 )
 
 var (
@@ -15,12 +14,11 @@ var (
 	rootCmd = &cobra.Command{
 		Use:     "tfversion",
 		Short:   "tfversion - A simple tool to manage Terraform versions",
-		Version: version, // The version is set during the build by making using of `go build -ldflags`.
+		Version: version, // the version is set during the build by making using of `go build -ldflags`
 		Run: func(cmd *cobra.Command, args []string) {
 			err := cmd.Help()
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				helpers.ExitWithError("unable to display help", err)
 			}
 		},
 	}
@@ -45,7 +43,6 @@ func init() {
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		helpers.ExitWithError("unable to execute command", err)
 	}
 }
