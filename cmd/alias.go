@@ -12,7 +12,8 @@ import (
 
 const (
 	aliasExample = "# Alias a Terraform version\n" +
-		"tfversion alias default 1.7.4"
+		"tfversion alias default 1.7.4\n" +
+		"tfversion alias legacy 1.2.4"
 )
 
 var (
