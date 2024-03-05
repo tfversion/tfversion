@@ -25,7 +25,9 @@ func GetDownloadLocation() string {
 	if err != nil {
 		fmt.Printf("error getting user home directory: %s", err)
 	}
-	return filepath.Join(user, DownloadDir)
+	downloadLocation := filepath.Join(user, DownloadDir)
+	ensureDownloadDirectoryExists(downloadLocation)
+	return downloadLocation
 }
 
 func GetInstallLocation(version string) string {
