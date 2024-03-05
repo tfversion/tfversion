@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/list"
@@ -47,11 +46,7 @@ var (
 
 			limit := min(maxResults, len(versions))
 			for _, version := range versions[:limit] {
-				if helpers.IsPreReleaseVersion(version) {
-					fmt.Println(color.YellowString(version))
-				} else {
-					fmt.Println(color.CyanString(version))
-				}
+				fmt.Println(helpers.ColoredVersion(version))
 			}
 		},
 	}
