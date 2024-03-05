@@ -22,7 +22,7 @@ var (
 		Example: uninstallExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 1 {
-				err := helpers.ErorWithHelp("tfversion uninstall -h")
+				err := helpers.ErrorWithHelp("tfversion uninstall -h")
 				helpers.ExitWithError("provide a Terraform version to uninstall", err)
 			}
 			uninstall.Uninstall(args[0])

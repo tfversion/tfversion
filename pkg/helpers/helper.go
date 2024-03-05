@@ -30,8 +30,8 @@ func ExitWithError(message string, err error) {
 	os.Exit(1)
 }
 
-// ErorWithHelp returns an error with a help message
-func ErorWithHelp(help string) error {
+// ErrorWithHelp returns an error with a help message
+func ErrorWithHelp(help string) error {
 	return fmt.Errorf("see %s for help and examples", color.CyanString("`%s`", help))
 }
 

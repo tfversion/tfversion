@@ -40,7 +40,7 @@ var (
 			// use latest version
 			if latest {
 				if len(args) != 0 {
-					err := helpers.ErorWithHelp("tfversion use -h")
+					err := helpers.ErrorWithHelp("tfversion use -h")
 					helpers.ExitWithError("`--latest` flag does not require specifying a Terraform version", err)
 				}
 				use.UseLatestVersion(preRelease)
@@ -50,7 +50,7 @@ var (
 			// use required version
 			if required {
 				if len(args) != 0 {
-					err := helpers.ErorWithHelp("tfversion use -h")
+					err := helpers.ErrorWithHelp("tfversion use -h")
 					helpers.ExitWithError("`--required` flag does not require specifying a Terraform version", err)
 				}
 				use.UseRequiredVersion()
@@ -59,7 +59,7 @@ var (
 
 			// use specific version
 			if len(args) != 1 {
-				err := helpers.ErorWithHelp("tfversion use -h")
+				err := helpers.ErrorWithHelp("tfversion use -h")
 				helpers.ExitWithError("provide a Terraform version to activate", err)
 			}
 			use.UseVersion(args[0])

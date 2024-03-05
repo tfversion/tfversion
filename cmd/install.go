@@ -43,7 +43,7 @@ var (
 			// install latest
 			if latest {
 				if len(args) != 0 {
-					err := helpers.ErorWithHelp("tfversion install -h")
+					err := helpers.ErrorWithHelp("tfversion install -h")
 					helpers.ExitWithError("`--latest` flag does not require specifying a Terraform version", err)
 				}
 				install.InstallLatestVersion(preRelease)
@@ -53,7 +53,7 @@ var (
 			// installed required version
 			if required {
 				if len(args) != 0 {
-					err := helpers.ErorWithHelp("tfversion install -h")
+					err := helpers.ErrorWithHelp("tfversion install -h")
 					helpers.ExitWithError("`--required` flag does not require specifying a Terraform version", err)
 				}
 				install.InstallRequiredVersion()
@@ -62,7 +62,7 @@ var (
 
 			// install specific version
 			if len(args) != 1 {
-				err := helpers.ErorWithHelp("tfversion install -h")
+				err := helpers.ErrorWithHelp("tfversion install -h")
 				helpers.ExitWithError("provide a Terraform version to install", err)
 			}
 			install.InstallVersion(args[0])
