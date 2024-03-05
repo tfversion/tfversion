@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
 	"github.com/tfversion/tfversion/pkg/alias"
+	"github.com/tfversion/tfversion/pkg/helpers"
 )
 
 const (
@@ -23,9 +23,8 @@ var (
 		Example: aliasExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 2 {
-				fmt.Println("error: provide an alias name and Terraform version")
-				fmt.Printf("See %s for help and examples\n", color.CyanString("`tfversion alias -h`"))
-				os.Exit(1)
+				err := fmt.Errorf("see %s for help and examples", color.CyanString("`tfversion alias -h`"))
+				helpers.ExitWithError("provide an alias name and Terraform version", err)
 			}
 			alias.AliasVersion(args[0], args[1])
 		},
