@@ -23,29 +23,20 @@ func UseVersion(version string) {
 		os.Exit(0)
 	}
 
-	// create the bin directory if it doesn't exist
-	targetPath := filepath.Join(download.GetDownloadLocation(), download.BinaryDir)
-	_, err := os.Stat(targetPath)
-	if os.IsNotExist(err) {
-		err = os.Mkdir(targetPath, 0755)
-		if err != nil {
-			fmt.Printf("error creating directory: %v\n", err)
-			os.Exit(1)
-		}
-	}
+	useLocation := getUseLocation()
 
 	// inform the user that they need to update their PATH
 	path := os.Getenv("PATH")
-	if !strings.Contains(path, targetPath) {
+	if !strings.Contains(path, useLocation) {
 		fmt.Println("Error: tfversion not found in your shell PATH.")
-		fmt.Printf("Please run %s to make this version available in your shell\n", color.CyanString("`export PATH=%s:$PATH`", targetPath))
+		fmt.Printf("Please run %s to make this version available in your shell\n", color.CyanString("`export PATH=%s:$PATH`", useLocation))
 		fmt.Println("Additionally, consider adding this line to your shell profile (e.g., .bashrc, .zshrc or fish config) for persistence.")
 		os.Exit(1)
 	}
 
 	// ensure the symlink target is available
-	binaryTargetPath := filepath.Join(targetPath, download.TerraformBinaryName)
-	_, err = os.Lstat(binaryTargetPath)
+	binaryTargetPath := filepath.Join(useLocation, download.TerraformBinaryName)
+	_, err := os.Lstat(binaryTargetPath)
 	if err == nil {
 		err = os.Remove(binaryTargetPath)
 		if err != nil {
@@ -91,4 +82,23 @@ func UseRequiredVersion() {
 			break
 		}
 	}
+}
+
+func getUseLocation() string {
+	user, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("error getting user home directory: %s", err)
+		os.Exit(1)
+	}
+
+	useLocation := filepath.Join(user, download.ApplicationDir, download.UseDir)
+	if _, err := os.Stat(useLocation); os.IsNotExist(err) {
+		err := os.Mkdir(useLocation, 0755)
+		if err != nil {
+			fmt.Printf("error creating use directory: %s", err)
+			os.Exit(1)
+		}
+	}
+
+	return useLocation
 }

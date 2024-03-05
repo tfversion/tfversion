@@ -22,9 +22,7 @@ func GetInstalledVersions() []string {
 
 	var versionNames []string
 	for _, v := range installedVersions {
-		if v.Name() != download.BinaryDir {
-			versionNames = append(versionNames, v.Name())
-		}
+		versionNames = append(versionNames, v.Name())
 	}
 
 	// Check if there are any versions
