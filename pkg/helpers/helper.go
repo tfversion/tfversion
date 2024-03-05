@@ -30,6 +30,11 @@ func ExitWithError(message string, err error) {
 	os.Exit(1)
 }
 
+// ErorWithHelp returns an error with a help message
+func ErorWithHelp(help string) error {
+	return fmt.Errorf("see %s for help and examples", color.CyanString("`%s`", help))
+}
+
 // IsPreReleaseVersion checks if the given version is a Terraform pre-release version
 func IsPreReleaseVersion(version string) bool {
 	return strings.Contains(version, "-alpha") || strings.Contains(version, "-beta") || strings.Contains(version, "-rc")

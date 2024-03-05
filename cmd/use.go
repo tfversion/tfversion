@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/use"
@@ -42,7 +40,7 @@ var (
 			// use latest version
 			if latest {
 				if len(args) != 0 {
-					err := fmt.Errorf("see %s for help and examples", color.CyanString("`tfversion use -h`"))
+					err := helpers.ErorWithHelp("tfversion use -h")
 					helpers.ExitWithError("`--latest` flag does not require specifying a Terraform version", err)
 				}
 				use.UseLatestVersion(preRelease)
@@ -52,7 +50,7 @@ var (
 			// use required version
 			if required {
 				if len(args) != 0 {
-					err := fmt.Errorf("see %s for help and examples", color.CyanString("`tfversion use -h`"))
+					err := helpers.ErorWithHelp("tfversion use -h")
 					helpers.ExitWithError("`--required` flag does not require specifying a Terraform version", err)
 				}
 				use.UseRequiredVersion()
@@ -61,7 +59,7 @@ var (
 
 			// use specific version
 			if len(args) != 1 {
-				err := fmt.Errorf("see %s for help and examples", color.CyanString("`tfversion use -h`"))
+				err := helpers.ErorWithHelp("tfversion use -h")
 				helpers.ExitWithError("provide a Terraform version to activate", err)
 			}
 			use.UseVersion(args[0])

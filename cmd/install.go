@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/install"
@@ -45,7 +43,7 @@ var (
 			// install latest
 			if latest {
 				if len(args) != 0 {
-					err := fmt.Errorf("see %s for help and examples", color.CyanString("`tfversion install -h`"))
+					err := helpers.ErorWithHelp("tfversion install -h")
 					helpers.ExitWithError("`--latest` flag does not require specifying a Terraform version", err)
 				}
 				install.InstallLatestVersion(preRelease)
@@ -55,7 +53,7 @@ var (
 			// installed required version
 			if required {
 				if len(args) != 0 {
-					err := fmt.Errorf("see %s for help and examples", color.CyanString("`tfversion install -h`"))
+					err := helpers.ErorWithHelp("tfversion install -h")
 					helpers.ExitWithError("`--required` flag does not require specifying a Terraform version", err)
 				}
 				install.InstallRequiredVersion()
@@ -64,7 +62,7 @@ var (
 
 			// install specific version
 			if len(args) != 1 {
-				err := fmt.Errorf("see %s for help and examples", color.CyanString("`tfversion install -h`"))
+				err := helpers.ErorWithHelp("tfversion install -h")
 				helpers.ExitWithError("provide a Terraform version to install", err)
 			}
 			install.InstallVersion(args[0])
