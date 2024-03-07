@@ -47,9 +47,7 @@ var (
 
 			limit := min(maxResults, len(versions))
 			for _, version := range versions[:limit] {
-				if helpers.IsPreReleaseVersion(version) && includePreReleaseVersions {
-					fmt.Println(helpers.ColoredVersion(version))
-				} else if !helpers.IsPreReleaseVersion(version) {
+				if !helpers.IsPreReleaseVersion(version) || includePreReleaseVersions {
 					fmt.Println(helpers.ColoredVersion(version))
 				}
 			}
