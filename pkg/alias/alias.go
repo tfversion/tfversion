@@ -59,14 +59,17 @@ func GetAliasLocation() string {
 // IsAlias checks if the given alias is valid.
 func IsAlias(alias string) bool {
 	aliasPath := filepath.Join(GetAliasLocation(), alias)
-	_, err := os.Stat(aliasPath)
+	_, err := os.Lstat(aliasPath)
 	return !os.IsNotExist(err)
 }
 
 // GetVersion returns the Terraform version for the given alias.
 func GetVersion(alias string) string {
 	aliasLocation := GetAliasLocation()
-	resolvePath, _ := filepath.EvalSymlinks(filepath.Join(aliasLocation, alias))
+	resolvePath, err := filepath.EvalSymlinks(filepath.Join(aliasLocation, alias))
+	if err != nil {
+		helpers.ExitWithError("resolving symlink", err)
+	}
 	_, targetVersion := filepath.Split(resolvePath)
 	return targetVersion
 }
