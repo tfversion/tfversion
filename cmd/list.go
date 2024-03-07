@@ -60,5 +60,5 @@ func init() {
 	listCmd.Flags().BoolVar(&installed, "installed", false, "list the installed Terraform versions")
 	listCmd.Flags().BoolVar(&aliases, "aliases", false, "list the aliased Terraform versions")
 	listCmd.Flags().IntVar(&maxResults, "max-results", 500, "maximum number of versions to list")
-	listCmd.Flags().BoolVarP(&includePreReleaseVersions, "pre-release", "p", false, "include pre-release versions")
+	listCmd.Flags().BoolVar(&includePreReleaseVersions, "pre-release", false, "include pre-release versions")
 }
