@@ -23,7 +23,7 @@ var (
 				err := helpers.ErrorWithHelp("tfversion unalias -h")
 				helpers.ExitWithError("provide an alias name", err)
 			}
-			unalias.UnaliasVersion(args[0])
+			unalias.Unalias(args[0])
 		},
 	}
 )

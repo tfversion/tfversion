@@ -9,8 +9,8 @@ import (
 	"github.com/tfversion/tfversion/pkg/helpers"
 )
 
-// UnaliasVersion removes the symlink for the specified alias.
-func UnaliasVersion(aliasName string) {
+// Unalias removes the symlink for the specified alias.
+func Unalias(aliasName string) {
 	aliasLocation := alias.GetAliasLocation()
 	aliasPath := filepath.Join(aliasLocation, aliasName)
 	_, err := os.Lstat(aliasPath)
