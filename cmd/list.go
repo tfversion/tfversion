@@ -40,6 +40,7 @@ var (
 		Example: listExample,
 		Run: func(cmd *cobra.Command, args []string) {
 
+			// find the correct type of versions to list
 			var versions []string
 			if installed {
 				versions = list.GetInstalledVersions()
@@ -49,11 +50,18 @@ var (
 				versions = list.GetAvailableVersions()
 			}
 
-			limit := min(maxResults, len(versions))
-			for _, version := range versions[:limit] {
+			// filter out pre-release versions if needed
+			var finalList []string
+			for _, version := range versions {
 				if !helpers.IsPreReleaseVersion(version) || includePreReleaseVersions {
-					fmt.Println(helpers.ColoredVersion(version))
+					finalList = append(finalList, version)
 				}
+			}
+
+			// show the list taking into consideration the max results
+			limit := min(maxResults, len(versions))
+			for _, version := range finalList[:limit] {
+				fmt.Println(helpers.ColoredVersion(version))
 			}
 		},
 	}
