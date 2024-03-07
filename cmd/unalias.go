@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/tfversion/tfversion/pkg/alias"
 	"github.com/tfversion/tfversion/pkg/helpers"
+	"github.com/tfversion/tfversion/pkg/unalias"
 )
 
 const (
@@ -23,7 +23,7 @@ var (
 				err := helpers.ErrorWithHelp("tfversion unalias -h")
 				helpers.ExitWithError("provide an alias name", err)
 			}
-			alias.UnaliasVersion(args[0])
+			unalias.UnaliasVersion(args[0])
 		},
 	}
 )

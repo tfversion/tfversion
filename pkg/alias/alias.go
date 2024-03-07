@@ -38,23 +38,6 @@ func AliasVersion(alias string, version string) {
 	fmt.Printf("Aliased Terraform version %s as %s\n", helpers.ColoredVersion(version), helpers.ColoredVersion(alias))
 }
 
-// UnaliasVersion removes the symlink for the specified alias.
-func UnaliasVersion(alias string) {
-	aliasLocation := GetAliasLocation()
-	aliasPath := filepath.Join(aliasLocation, alias)
-	_, err := os.Lstat(aliasPath)
-	if err != nil {
-		helpers.ExitWithError("removing symlink", err)
-	}
-
-	err = os.RemoveAll(aliasPath)
-	if err != nil {
-		helpers.ExitWithError("removing symlink", err)
-	}
-
-	fmt.Printf("Removed alias %s\n", helpers.ColoredVersion(alias))
-}
-
 // GetAliasLocation returns the directory where tfversion stores the aliases.
 func GetAliasLocation() string {
 	user, err := os.UserHomeDir()
