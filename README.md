@@ -103,6 +103,12 @@ tfversion list --installed
 tfversion list --aliases
 ```
 
+### List pre-release versions
+
+```sh
+tfversion list --pre-release
+```
+
 ### Uninstall a specific version
 
 ```sh
