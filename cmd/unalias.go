@@ -9,7 +9,7 @@ import (
 
 const (
 	unaliasExample = "# Un-alias a Terraform version\n" +
-		"tfversion anlias default\n" +
+		"tfversion unalias default\n" +
 		"tfversion unalias legacy"
 )
 
