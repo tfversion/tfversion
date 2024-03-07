@@ -24,7 +24,7 @@ func AliasVersion(alias string, version string) {
 	if err == nil {
 		err = os.RemoveAll(aliasPath)
 		if err != nil {
-			helpers.ExitWithError("error removing symlink", err)
+			helpers.ExitWithError("removing symlink", err)
 		}
 	}
 
@@ -38,18 +38,35 @@ func AliasVersion(alias string, version string) {
 	fmt.Printf("Aliased Terraform version %s as %s\n", helpers.ColoredVersion(version), helpers.ColoredVersion(alias))
 }
 
+// UnaliasVersion removes the symlink for the specified alias.
+func UnaliasVersion(alias string) {
+	aliasLocation := GetAliasLocation()
+	aliasPath := filepath.Join(aliasLocation, alias)
+	_, err := os.Lstat(aliasPath)
+	if err != nil {
+		helpers.ExitWithError("removing symlink", err)
+	}
+
+	err = os.RemoveAll(aliasPath)
+	if err != nil {
+		helpers.ExitWithError("removing symlink", err)
+	}
+
+	fmt.Printf("Removed alias %s\n", helpers.ColoredVersion(alias))
+}
+
 // GetAliasLocation returns the directory where tfversion stores the aliases.
 func GetAliasLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
-		helpers.ExitWithError("error getting user home directory", err)
+		helpers.ExitWithError("getting user home directory", err)
 	}
 
 	aliasLocation := filepath.Join(user, download.ApplicationDir, download.AliasesDir)
 	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
 		err := os.Mkdir(aliasLocation, 0755)
 		if err != nil {
-			helpers.ExitWithError("error creating alias directory", err)
+			helpers.ExitWithError("creating alias directory", err)
 		}
 	}
 
