@@ -27,7 +27,7 @@ func GetDownloadLocation() string {
 
 	downloadLocation := filepath.Join(user, ApplicationDir, VersionsDir)
 	if _, err := os.Stat(downloadLocation); os.IsNotExist(err) {
-		err := os.Mkdir(downloadLocation, 0755)
+		err := os.MkdirAll(downloadLocation, 0755)
 		if err != nil {
 			helpers.ExitWithError("error creating download directory", err)
 		}

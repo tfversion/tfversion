@@ -104,7 +104,7 @@ func getUseLocation() string {
 
 	useLocation := filepath.Join(user, download.ApplicationDir, download.UseDir)
 	if _, err := os.Stat(useLocation); os.IsNotExist(err) {
-		err := os.Mkdir(useLocation, 0755)
+		err := os.MkdirAll(useLocation, 0755)
 		if err != nil {
 			helpers.ExitWithError("creating use directory", err)
 		}
