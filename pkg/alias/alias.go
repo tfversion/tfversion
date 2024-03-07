@@ -47,7 +47,7 @@ func GetAliasLocation() string {
 
 	aliasLocation := filepath.Join(user, download.ApplicationDir, download.AliasesDir)
 	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
-		err := os.Mkdir(aliasLocation, 0755)
+		err := os.MkdirAll(aliasLocation, 0755)
 		if err != nil {
 			helpers.ExitWithError("creating alias directory", err)
 		}
