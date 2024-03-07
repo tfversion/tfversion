@@ -59,7 +59,7 @@ var (
 			}
 
 			// show the list taking into consideration the max results
-			limit := min(maxResults, len(versions))
+			limit := min(maxResults, len(finalList))
 			for _, version := range finalList[:limit] {
 				fmt.Println(helpers.ColoredVersion(version))
 			}
