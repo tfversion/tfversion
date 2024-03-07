@@ -22,7 +22,11 @@ const (
 		"\n" +
 		"\n" +
 		"# List all aliased Terraform versions\n" +
-		"tfversion list --aliases"
+		"tfversion list --aliases\n" +
+		"\n" +
+		"\n" +
+		"# Include pre-release versions\n" +
+		"tfversion list --pre-release"
 )
 
 var (
