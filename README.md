@@ -78,6 +78,13 @@ tfversion use --latest --pre-release
 tfversion use --required
 ```
 
+### Automatically install a version when using
+
+```sh
+tfversion use 1.7.4 --install
+tfversion use --latest --install
+```
+
 ### Create and use an alias
 
 ```sh

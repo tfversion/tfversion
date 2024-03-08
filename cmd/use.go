@@ -22,11 +22,16 @@ const (
 		"\n" +
 		"\n" +
 		"# Use the required Terraform version for your current directory\n" +
-		"tfversion use --required"
+		"tfversion use --required\n" +
+		"\n" +
+		"\n" +
+		"# Automatically install the target version if it is missing\n" +
+		"tfversion use 1.7.3 --install"
 )
 
 var (
-	useCmd = &cobra.Command{
+	autoInstall bool
+	useCmd      = &cobra.Command{
 		Use:     "use",
 		Short:   "Activates a given Terraform version",
 		Example: useExample,
@@ -43,7 +48,7 @@ var (
 					err := helpers.ErrorWithHelp("tfversion use -h")
 					helpers.ExitWithError("`--latest` flag does not require specifying a Terraform version", err)
 				}
-				use.UseLatestVersion(preRelease)
+				use.UseLatestVersion(preRelease, autoInstall)
 				os.Exit(0)
 			}
 
@@ -53,7 +58,7 @@ var (
 					err := helpers.ErrorWithHelp("tfversion use -h")
 					helpers.ExitWithError("`--required` flag does not require specifying a Terraform version", err)
 				}
-				use.UseRequiredVersion()
+				use.UseRequiredVersion(autoInstall)
 				os.Exit(0)
 			}
 
@@ -62,7 +67,7 @@ var (
 				err := helpers.ErrorWithHelp("tfversion use -h")
 				helpers.ExitWithError("provide a Terraform version to activate", err)
 			}
-			use.UseVersion(args[0])
+			use.UseVersion(args[0], autoInstall)
 		},
 	}
 )
@@ -72,4 +77,5 @@ func init() {
 	useCmd.Flags().BoolVar(&latest, "latest", false, "use the latest stable Terraform version")
 	useCmd.Flags().BoolVar(&preRelease, "pre-release", false, "When used with --latest, use the latest pre-release version")
 	useCmd.Flags().BoolVar(&required, "required", false, "use the required Terraform version for your current directory")
+	useCmd.Flags().BoolVar(&autoInstall, "install", false, "automatically install if the target version is missing")
 }

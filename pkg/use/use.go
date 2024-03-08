@@ -10,11 +10,12 @@ import (
 	"github.com/tfversion/tfversion/pkg/alias"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
+	"github.com/tfversion/tfversion/pkg/install"
 	"github.com/tfversion/tfversion/pkg/list"
 )
 
 // UseVersion activates the specified Terraform version or one of the latest versions
-func UseVersion(versionOrAlias string) {
+func UseVersion(versionOrAlias string, autoInstall bool) {
 
 	// find the version (via alias or directly)
 	var version string
@@ -26,14 +27,16 @@ func UseVersion(versionOrAlias string) {
 
 	// check if the version is installed
 	if !download.IsAlreadyDownloaded(version) {
-		err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
-		helpers.ExitWithError("using", err)
+		if !autoInstall {
+			err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
+			helpers.ExitWithError("using", err)
+		}
+		install.InstallVersion(version)
 	}
-
-	useLocation := getUseLocation()
 
 	// inform the user that they need to update their PATH
 	path := os.Getenv("PATH")
+	useLocation := getUseLocation()
 	if !strings.Contains(path, useLocation) {
 		fmt.Printf("%s not found in your shell PATH\n", color.CyanString(useLocation))
 		fmt.Printf("Please run %s to make this version available in your shell\n", color.CyanString("`export PATH=%s:$PATH`", useLocation))
@@ -62,13 +65,13 @@ func UseVersion(versionOrAlias string) {
 }
 
 // UseLatestVersion activates the latest Terraform version
-func UseLatestVersion(preRelease bool) {
+func UseLatestVersion(preRelease bool, autoInstall bool) {
 	version := list.FindLatestVersion(preRelease)
-	UseVersion(version)
+	UseVersion(version, autoInstall)
 }
 
 // UseRequiredVersion activates the required Terraform version from the .tf files in the current directory
-func UseRequiredVersion() {
+func UseRequiredVersion(autoInstall bool) {
 	terraformFiles, err := helpers.FindTerraformFiles()
 	if err != nil {
 		helpers.ExitWithError("finding Terraform files", err)
@@ -93,7 +96,7 @@ func UseRequiredVersion() {
 		helpers.ExitWithError("installing required version", err)
 	}
 
-	UseVersion(foundVersion)
+	UseVersion(foundVersion, autoInstall)
 }
 
 func getUseLocation() string {
