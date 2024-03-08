@@ -99,7 +99,7 @@ func UseRequiredVersion(autoInstall bool) {
 	UseVersion(foundVersion, autoInstall)
 }
 
-func getUseLocation() string {
+func GetUseLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
 		helpers.ExitWithError("user home directory", err)
