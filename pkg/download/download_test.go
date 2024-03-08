@@ -8,7 +8,7 @@ import (
 
 func TestGetDownloadLocation(t *testing.T) {
 	tempDir := t.TempDir()
-	os.Setenv("HOME", tempDir)
+	t.Setenv("HOME", tempDir)
 	downloadLocation := GetDownloadLocation()
 
 	expectedLocation := filepath.Join(tempDir, ".tfversion", "versions")
