@@ -24,6 +24,10 @@ func ColoredInstallHelper(version string) string {
 	return color.CyanString(fmt.Sprintf("`tfversion install %s`", version))
 }
 
+func ColoredListHelper() string {
+	return color.CyanString("`tfversion list`")
+}
+
 // ExitWithError prints an error message and exits with status code 1
 func ExitWithError(message string, err error) {
 	fmt.Printf("%s %s: %s\n", color.HiRedString("error:"), message, err)
