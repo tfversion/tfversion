@@ -1,6 +1,7 @@
 package current
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -12,17 +13,17 @@ import (
 )
 
 // CheckCurrentVersion prints the current active version of Terraform.
-func CheckCurrentVersion() error {
+func CheckCurrentVersion() {
 
 	symlinkPath := filepath.Join(use.GetUseLocation(), download.TerraformBinaryName)
 	_, err := os.Lstat(symlinkPath)
 	if err != nil {
-		return fmt.Errorf("no active Terraform version found")
+		helpers.ExitWithError("could not determine active Terraform version", err)
 	}
 
 	realPath, err := filepath.EvalSymlinks(symlinkPath)
 	if err != nil {
-		return fmt.Errorf("could not read symlink")
+		helpers.ExitWithError("could not determine active Terraform version", err)
 	}
 	left := fmt.Sprintf("%s/", download.VersionsDir)
 	right := fmt.Sprintf("/%s", download.TerraformBinaryName)
@@ -30,9 +31,8 @@ func CheckCurrentVersion() error {
 	match := rx.FindStringSubmatch(realPath)
 
 	if match == nil {
-		return fmt.Errorf("failed to match regex on path")
+		// helpers.er
+		helpers.ExitWithError("could not determine active Terraform version", errors.New("failed to match regex on path"))
 	}
 	fmt.Printf("Current active Terraform version: %s\n", helpers.ColoredVersion(match[1]))
-
-	return nil
 }
