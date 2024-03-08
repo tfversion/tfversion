@@ -30,7 +30,7 @@ func UseVersion(versionOrAlias string) {
 		helpers.ExitWithError("using", err)
 	}
 
-	useLocation := getUseLocation()
+	useLocation := GetUseLocation()
 
 	// inform the user that they need to update their PATH
 	path := os.Getenv("PATH")
@@ -96,7 +96,7 @@ func UseRequiredVersion() {
 	UseVersion(foundVersion)
 }
 
-func getUseLocation() string {
+func GetUseLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
 		helpers.ExitWithError("user home directory", err)

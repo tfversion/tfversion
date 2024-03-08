@@ -115,6 +115,11 @@ tfversion list --pre-release
 tfversion uninstall 1.7.4
 ```
 
+### Display the currently activated version of Terraform
+```sh
+tfversion current
+```
+
 ## Contributing
 
 Contributions are highly appreciated and always welcome.
