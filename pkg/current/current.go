@@ -16,12 +16,12 @@ func CheckCurrentVersion() {
 	symlinkPath := filepath.Join(use.GetUseLocation(), download.TerraformBinaryName)
 	_, err := os.Lstat(symlinkPath)
 	if err != nil {
-		helpers.ExitWithError("could not determine active Terraform version", err)
+		helpers.ExitWithError("no current terraform version found", err)
 	}
 
 	realPath, err := filepath.EvalSymlinks(symlinkPath)
 	if err != nil {
-		helpers.ExitWithError("could not determine active Terraform version", err)
+		helpers.ExitWithError("resolving symlink", err)
 	}
 	_, currentVersion := filepath.Split(filepath.Dir(realPath))
 
