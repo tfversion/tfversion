@@ -38,6 +38,12 @@ var (
 		Use:     "list",
 		Short:   "Lists all Terraform versions",
 		Example: listExample,
+		PreRun: func(cmd *cobra.Command, args []string) {
+			if maxResults < 0 {
+				err := helpers.ErrorWithHelp("tfversion list -h")
+				helpers.ExitWithError("--max-results cannot be negative", err)
+			}
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 
 			// find the correct type of versions to list
