@@ -32,12 +32,18 @@ const (
 var (
 	installed                 bool
 	aliases                   bool
-	maxResults                uint
+	maxResults                int
 	includePreReleaseVersions bool
 	listCmd                   = &cobra.Command{
 		Use:     "list",
 		Short:   "Lists all Terraform versions",
 		Example: listExample,
+		PreRun: func(cmd *cobra.Command, args []string) {
+			if maxResults < 0 {
+				err := helpers.ErrorWithHelp("tfversion list -h")
+				helpers.ExitWithError("--max-results cannot be negative", err)
+			}
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 
 			// find the correct type of versions to list
@@ -59,7 +65,7 @@ var (
 			}
 
 			// show the list taking into consideration the max results
-			limit := min(int(maxResults), len(finalList))
+			limit := min(maxResults, len(finalList))
 			for _, version := range finalList[:limit] {
 				fmt.Println(helpers.ColoredVersion(version))
 			}
@@ -71,6 +77,6 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.Flags().BoolVar(&installed, "installed", false, "list the installed Terraform versions")
 	listCmd.Flags().BoolVar(&aliases, "aliases", false, "list the aliased Terraform versions")
-	listCmd.Flags().UintVar(&maxResults, "max-results", 500, "maximum number of versions to list")
+	listCmd.Flags().IntVar(&maxResults, "max-results", 500, "maximum number of versions to list")
 	listCmd.Flags().BoolVar(&includePreReleaseVersions, "pre-release", false, "include pre-release versions")
 }
