@@ -11,6 +11,7 @@ import (
 const (
 	// TerraformReleasesApiUrl is the URL to list available Terraform releases.
 	TerraformReleasesApiUrl = "https://api.releases.hashicorp.com/v1/releases/terraform"
+	ReleasesPerPage         = 20
 )
 
 type Build struct {
@@ -34,45 +35,46 @@ type Release struct {
 	TimestampUpdated string  `json:"timestamp_updated"`
 }
 
-// TODO: implement automatic pagination depending on maxResults (API returns max. 20 results per page)
-// API docs say to use the timestamp_created of the last list item and use query parameter `after` to get the next page
-// Best is to repeat this to get everything, then filter client side on pre-release and limit to maxResults
-// since the API does not support filtering on pre-release and other properties
-func ListVersions(maxResults int) []string {
-	url := fmt.Sprintf("%s?limit=%v", TerraformReleasesApiUrl, maxResults)
+func ListReleases(after string) ([]*Release, error) {
+	url := fmt.Sprintf("%s?limit=%v&after=%s", TerraformReleasesApiUrl, ReleasesPerPage, after)
 	resp, err := http.Get(url)
 	if err != nil {
-		helpers.ExitWithError("getting Terraform releases from API", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	var releases []*Release
-	if err := json.NewDecoder(resp.Body).Decode(&releases); err != nil {
-		helpers.ExitWithError("getting parsing Terraform releases", err)
+	err = json.NewDecoder(resp.Body).Decode(&releases)
+	if err != nil {
+		return nil, err
 	}
 
-	var availableVersions []string
-	for _, r := range releases {
-		availableVersions = append(availableVersions, r.Version)
+	// append next page if there are still results
+	if len(releases) > 0 {
+		lastRelease := releases[len(releases)-1]
+		nextPage, err := ListReleases(lastRelease.TimestampCreated)
+		if err != nil {
+			return nil, err
+		}
+		releases = append(releases, nextPage...)
 	}
 
-	return availableVersions
+	return releases, nil
 }
 
-// TODO: use this method to validate a specific version before downloading and return builds[0].url for downloading
-func GetVersion(version string) string {
+// TODO: use this method to validate a specific version before downloading and use builds[0].url for downloading
+func GetRelease(version string) (*Release, error) {
 	url := fmt.Sprintf("%s/%s", TerraformReleasesApiUrl, version)
 	resp, err := http.Get(url)
 	if err != nil {
-		helpers.ExitWithError("getting Terraform release from API", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 
-	var release Release
+	var release *Release
 	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
 		helpers.ExitWithError("parsing Terraform release", err)
 	}
 
-	// TODO: check if URL exists
-	return release.Builds[0].Url
+	return release, nil
 }
