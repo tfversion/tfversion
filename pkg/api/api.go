@@ -9,9 +9,6 @@ import (
 	"github.com/tfversion/tfversion/pkg/helpers"
 )
 
-// TODO: implement automatic pagination depending on maxResults (API returns max. 20 results per page)
-// API docs say to use the timestamp_created of the last list item and use query parameter `after` to get the next page
-
 type Build struct {
 	Arch string `json:"arch"`
 	Os   string `json:"os"`
@@ -33,6 +30,10 @@ type Release struct {
 	TimestampUpdated string  `json:"timestamp_updated"`
 }
 
+// TODO: implement automatic pagination depending on maxResults (API returns max. 20 results per page)
+// API docs say to use the timestamp_created of the last list item and use query parameter `after` to get the next page
+// Best is to repeat this to get everything, then filter client side on pre-release and limit to maxResults
+// since the API does not support filtering on pre-release and other properties
 func ListVersions(maxResults int) []string {
 	url := fmt.Sprintf("%s?limit=%v", download.TerraformReleasesApiUrl, maxResults)
 	resp, err := http.Get(url)
@@ -54,6 +55,7 @@ func ListVersions(maxResults int) []string {
 	return availableVersions
 }
 
+// TODO: use this method to validate a specific version before downloading/installing
 func GetVersion(version string) Release {
 	resp, err := http.Get(download.TerraformReleasesApiUrl + "/" + version)
 	if err != nil {
