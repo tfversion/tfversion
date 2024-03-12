@@ -53,7 +53,7 @@ var (
 			} else if aliases {
 				versions = list.GetAliasedVersions()
 			} else {
-				versions = list.GetAvailableVersions()
+				versions = list.GetAvailableVersionsFromApi(maxResults)
 			}
 
 			// filter out pre-release versions if needed
@@ -77,6 +77,6 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.Flags().BoolVar(&installed, "installed", false, "list the installed Terraform versions")
 	listCmd.Flags().BoolVar(&aliases, "aliases", false, "list the aliased Terraform versions")
-	listCmd.Flags().IntVar(&maxResults, "max-results", 500, "maximum number of versions to list")
+	listCmd.Flags().IntVar(&maxResults, "max-results", 20, "maximum number of versions to list")
 	listCmd.Flags().BoolVar(&includePreReleaseVersions, "pre-release", false, "include pre-release versions")
 }

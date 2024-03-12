@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/tfversion/tfversion/pkg/alias"
+	"github.com/tfversion/tfversion/pkg/api"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"golang.org/x/net/html"
@@ -66,6 +67,10 @@ func GetInstalledVersions() []string {
 	}
 
 	return reversedVersions
+}
+
+func GetAvailableVersionsFromApi(maxResults int) []string {
+	return api.ListVersions(maxResults)
 }
 
 // GetAvailableVersions returns the available Terraform versions from the official Terraform releases page
