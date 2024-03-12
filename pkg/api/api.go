@@ -5,8 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
+)
+
+const (
+	// TerraformReleasesApiUrl is the URL to list available Terraform releases.
+	TerraformReleasesApiUrl = "https://api.releases.hashicorp.com/v1/releases/terraform"
 )
 
 type Build struct {
@@ -35,7 +39,7 @@ type Release struct {
 // Best is to repeat this to get everything, then filter client side on pre-release and limit to maxResults
 // since the API does not support filtering on pre-release and other properties
 func ListVersions(maxResults int) []string {
-	url := fmt.Sprintf("%s?limit=%v", download.TerraformReleasesApiUrl, maxResults)
+	url := fmt.Sprintf("%s?limit=%v", TerraformReleasesApiUrl, maxResults)
 	resp, err := http.Get(url)
 	if err != nil {
 		helpers.ExitWithError("getting Terraform releases from API", err)
@@ -55,9 +59,10 @@ func ListVersions(maxResults int) []string {
 	return availableVersions
 }
 
-// TODO: use this method to validate a specific version before downloading/installing
-func GetVersion(version string) Release {
-	resp, err := http.Get(download.TerraformReleasesApiUrl + "/" + version)
+// TODO: use this method to validate a specific version before downloading and return builds[0].url for downloading
+func GetVersion(version string) string {
+	url := fmt.Sprintf("%s/%s", TerraformReleasesApiUrl, version)
+	resp, err := http.Get(url)
 	if err != nil {
 		helpers.ExitWithError("getting Terraform release from API", err)
 	}
@@ -68,5 +73,6 @@ func GetVersion(version string) Release {
 		helpers.ExitWithError("parsing Terraform release", err)
 	}
 
-	return release
+	// TODO: check if URL exists
+	return release.Builds[0].Url
 }

@@ -3,8 +3,6 @@ package download
 const (
 	// TerraformReleasesUrl is the URL used to download Terraform releases from.
 	TerraformReleasesUrl = "https://releases.hashicorp.com/terraform"
-	// TerraformReleasesApiUrl is the URL to list available Terraform releases.
-	TerraformReleasesApiUrl = "https://api.releases.hashicorp.com/v1/releases/terraform"
 	// MaxRetries is the maximum number of retries for a download.
 	MaxRetries = 3
 	// RetryTimeInSeconds is the time to wait before retrying a download.
