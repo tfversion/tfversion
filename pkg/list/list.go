@@ -82,6 +82,8 @@ func GetAvailableVersionsFromApi() []string {
 		availableVersions = append(availableVersions, r.Version)
 	}
 
+	// TODO: sort the list
+
 	return availableVersions
 }
 
