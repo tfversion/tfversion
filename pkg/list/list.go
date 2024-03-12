@@ -6,8 +6,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/tfversion/tfversion/pkg/alias"
+	"github.com/tfversion/tfversion/pkg/api"
 	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"golang.org/x/net/html"
@@ -66,6 +68,23 @@ func GetInstalledVersions() []string {
 	}
 
 	return reversedVersions
+}
+
+func GetAvailableVersionsFromApi() []string {
+	currentTime := time.Now().UTC().Format(time.RFC3339)
+	releases, err := api.ListReleases(currentTime)
+	if err != nil {
+		helpers.ExitWithError("getting Terraform releases from API", err)
+	}
+
+	var availableVersions []string
+	for _, r := range releases {
+		availableVersions = append(availableVersions, r.Version)
+	}
+
+	// TODO: sort the list
+
+	return availableVersions
 }
 
 // GetAvailableVersions returns the available Terraform versions from the official Terraform releases page

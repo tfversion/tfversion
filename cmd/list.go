@@ -53,7 +53,7 @@ var (
 			} else if aliases {
 				versions = list.GetAliasedVersions()
 			} else {
-				versions = list.GetAvailableVersions()
+				versions = list.GetAvailableVersionsFromApi()
 			}
 
 			// filter out pre-release versions if needed
