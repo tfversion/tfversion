@@ -25,24 +25,6 @@ func GetDownloadLocation() string {
 	return downloadLocation
 }
 
-// GetAliasLocation returns the directory where tfversion stores the aliases.
-func GetAliasLocation() string {
-	user, err := os.UserHomeDir()
-	if err != nil {
-		helpers.ExitWithError("getting user home directory", err)
-	}
-
-	aliasLocation := filepath.Join(user, ApplicationDir, AliasesDir)
-	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
-		err := os.MkdirAll(aliasLocation, 0755)
-		if err != nil {
-			helpers.ExitWithError("creating alias directory", err)
-		}
-	}
-
-	return aliasLocation
-}
-
 // GetUseLocation returns the directory where tfversion stores the symlink to the currently used Terraform version.
 func GetUseLocation() string {
 	user, err := os.UserHomeDir()
@@ -74,21 +56,6 @@ func IsAlreadyDownloaded(version string) bool {
 	binaryPath := GetBinaryLocation(version)
 	_, err := os.Stat(binaryPath)
 	return !os.IsNotExist(err)
-}
-
-// CreateSymlink creates a symlink at the given path pointing to the source path.
-func CreateSymlink(sourcePath, targetPath string) error {
-	return os.Symlink(sourcePath, targetPath)
-}
-
-// RemoveSymlink removes the symlink at the given path.
-func RemoveSymlink(path string) error {
-	_, err := os.Lstat(path)
-	if err != nil {
-		return err
-	}
-	err = os.Remove(path)
-	return err
 }
 
 // EnsureDirExists checks if the given directory exists, and creates it if it doesn't.

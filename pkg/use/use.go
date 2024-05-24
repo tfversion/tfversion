@@ -2,11 +2,7 @@ package use
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
-	"strings"
-
-	"github.com/fatih/color"
 
 	"github.com/tfversion/tfversion/pkg/client"
 	"github.com/tfversion/tfversion/pkg/helpers"
@@ -19,8 +15,8 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 
 	// find the version (via alias or directly)
 	var version string
-	if isAlias(versionOrAlias) {
-		version = getAliasVersion(versionOrAlias)
+	if paths.IsAlias(versionOrAlias) {
+		version = paths.GetAliasVersion(versionOrAlias)
 	} else {
 		version = versionOrAlias
 	}
@@ -34,16 +30,9 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 		install.InstallVersion(version)
 	}
 
-	// inform the user that they need to update their PATH
-	path := os.Getenv("PATH")
+	// check the symlink target
 	useLocation := paths.GetUseLocation()
-	if !strings.Contains(path, useLocation) {
-		fmt.Printf("%s not found in your shell PATH\n", color.CyanString(useLocation))
-		fmt.Printf("Please run %s to make this version available in your shell\n", color.CyanString("`export PATH=%s:$PATH`", useLocation))
-		fmt.Printf("Additionally, consider adding this line to your shell profile (e.g., .bashrc, .zshrc or fish config) for persistence.\n")
-		os.Exit(1)
-	}
-
+	helpers.WarnIfNotInPath(useLocation)
 	binaryTargetPath := filepath.Join(useLocation, paths.TerraformBinaryName)
 
 	// ensure the symlink target is available
@@ -54,7 +43,7 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 
 	// create the symlink
 	binaryVersionPath := paths.GetBinaryLocation(version)
-	err = os.Symlink(binaryVersionPath, binaryTargetPath)
+	err = paths.CreateSymlink(binaryVersionPath, binaryTargetPath)
 	if err != nil {
 		helpers.ExitWithError("creating symlink", err)
 	}
@@ -95,22 +84,4 @@ func UseRequiredVersion(autoInstall bool) {
 	}
 
 	UseVersion(foundVersion, autoInstall)
-}
-
-// isAlias checks if the given alias is valid.
-func isAlias(alias string) bool {
-	aliasPath := filepath.Join(paths.GetAliasLocation(), alias)
-	_, err := os.Lstat(aliasPath)
-	return !os.IsNotExist(err)
-}
-
-// getAliasVersion returns the Terraform version for the given alias.
-func getAliasVersion(alias string) string {
-	aliasPath := filepath.Join(paths.GetAliasLocation(), alias)
-	resolvePath, err := filepath.EvalSymlinks(aliasPath)
-	if err != nil {
-		helpers.ExitWithError("resolving symlink", err)
-	}
-	_, targetVersion := filepath.Split(resolvePath)
-	return targetVersion
 }
