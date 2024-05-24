@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/tfversion/tfversion/pkg/paths"
+	"github.com/tfversion/tfversion/pkg/store"
 )
 
 // UnzipRelease extracts the Terraform binary from the zip file to the specified destination.
@@ -34,7 +34,7 @@ func UnzipRelease(source, destination string) error {
 
 	// Iterate over zip files inside the archive and unzip only the "terraform" binary.
 	for _, f := range reader.File {
-		if f.Name == paths.TerraformBinaryName {
+		if f.Name == store.TerraformBinaryName {
 			return unzipFile(f, destination)
 		}
 	}
@@ -43,9 +43,9 @@ func UnzipRelease(source, destination string) error {
 }
 
 func unzipFile(f *zip.File, destination string) error {
-	// Check if file paths are not vulnerable to Zip Slip.
+	// Check if file store are not vulnerable to Zip Slip.
 	filePath := filepath.Join(destination, f.Name)
-	if !strings.HasPrefix(filePath, filepath.Clean(destination)+string(os.PathSeparator)) {
+	if !strings.HasPrefix(filePath, filepath.Clean(destination)+string(os.storeeparator)) {
 		return fmt.Errorf("invalid file path: %s", filePath)
 	}
 

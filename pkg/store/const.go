@@ -1,4 +1,4 @@
-package paths
+package store
 
 const (
 	// ApplicationDir is the directory where tfversion downloads Terraform releases.

@@ -5,12 +5,12 @@ import (
 
 	"github.com/tfversion/tfversion/pkg/client"
 	"github.com/tfversion/tfversion/pkg/helpers"
-	"github.com/tfversion/tfversion/pkg/paths"
+	"github.com/tfversion/tfversion/pkg/store"
 )
 
 // GetAliasedVersions returns the aliased Terraform versions.
 func GetAliasedVersions() []string {
-	versionNames := paths.GetAliasVersions()
+	versionNames := store.GetAliasVersions()
 	if len(versionNames) == 0 {
 		err := fmt.Errorf("no versions found")
 		helpers.ExitWithError("listing alias directory", err)
@@ -20,7 +20,7 @@ func GetAliasedVersions() []string {
 
 // GetInstalledVersions returns the installed Terraform versions.
 func GetInstalledVersions() []string {
-	versionNames := paths.GetInstalledVersions()
+	versionNames := store.GetInstalledVersions()
 	if len(versionNames) == 0 {
 		err := fmt.Errorf("no versions found")
 		helpers.ExitWithError("listing installed versions", err)

@@ -5,13 +5,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/tfversion/tfversion/pkg/paths"
+	"github.com/tfversion/tfversion/pkg/store"
 )
 
 func TestGetDownloadLocation(t *testing.T) {
 	tempDir := t.TempDir()
 	t.Setenv("HOME", tempDir)
-	downloadLocation := paths.GetInstallLocation()
+	downloadLocation := store.GetInstallLocation()
 
 	expectedLocation := filepath.Join(tempDir, ".tfversion", "versions")
 	if downloadLocation != expectedLocation {

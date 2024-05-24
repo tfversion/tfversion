@@ -6,18 +6,18 @@ import (
 	"github.com/tfversion/tfversion/pkg/client"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/install"
-	"github.com/tfversion/tfversion/pkg/paths"
+	"github.com/tfversion/tfversion/pkg/store"
 )
 
 // UseVersion activates the specified Terraform version or one of the latest versions
 func UseVersion(version string, autoInstall bool) {
 	// find the version (via alias or directly)
-	if paths.IsAlias(version) {
-		version = paths.GetAliasVersion(version)
+	if store.IsAlias(version) {
+		version = store.GetAliasVersion(version)
 	}
 
 	// check if the version is installed
-	if !paths.IsInstalled(version) && !autoInstall {
+	if !store.IsInstalled(version) && !autoInstall {
 		err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
 		helpers.ExitWithError("using", err)
 	}
@@ -28,18 +28,18 @@ func UseVersion(version string, autoInstall bool) {
 	}
 
 	// check the PATH environment
-	helpers.WarnIfNotInPath(paths.GetUseLocation())
+	helpers.WarnIfNotInPath(store.GetUseLocation())
 
 	// ensure the symlink target is available
-	binaryTargetPath := paths.GetActiveBinaryLocation()
-	err := paths.RemoveSymlink(binaryTargetPath)
+	binaryTargetPath := store.GetActiveBinaryLocation()
+	err := store.RemoveSymlink(binaryTargetPath)
 	if err != nil {
 		helpers.ExitWithError("removing symlink", err)
 	}
 
 	// create the symlink
-	binaryVersionPath := paths.GetBinaryLocation(version)
-	err = paths.CreateSymlink(binaryVersionPath, binaryTargetPath)
+	binaryVersionPath := store.GetBinaryLocation(version)
+	err = store.CreateSymlink(binaryVersionPath, binaryTargetPath)
 	if err != nil {
 		helpers.ExitWithError("creating symlink", err)
 	}

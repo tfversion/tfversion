@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/tfversion/tfversion/pkg/helpers"
-	"github.com/tfversion/tfversion/pkg/paths"
+	"github.com/tfversion/tfversion/pkg/store"
 )
 
 // Download downloads the Terraform release zip file for the given version, OS and architecture.
 func Download(version string) (string, error) {
-	downloadLocation := paths.GetInstallLocation()
+	downloadLocation := store.GetInstallLocation()
 
 	// construct the file name based on the version, OS and architecture
 	fileName := fmt.Sprintf("terraform_%s_%s_%s.zip", version, runtime.GOOS, runtime.GOARCH)
