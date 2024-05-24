@@ -3,6 +3,7 @@ package client
 import (
 	"fmt"
 	"net/http"
+	"slices"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -41,6 +42,12 @@ func parseAvailableVersions(n *html.Node) []string {
 	}
 
 	return availableVersions
+}
+
+// IsAvailableVersion checks if a version is available in the official Terraform releases page
+func IsAvailableVersion(version string) bool {
+	availableVersions := ListAvailableVersions()
+	return slices.Contains(availableVersions, version)
 }
 
 // FindLatestVersion finds the latest available Terraform version (or pre-release version)

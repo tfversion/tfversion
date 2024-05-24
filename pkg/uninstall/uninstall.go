@@ -2,7 +2,6 @@ package uninstall
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/paths"
@@ -15,7 +14,7 @@ func Uninstall(version string) {
 	}
 
 	installLocation := paths.GetInstalledVersionLocation(version)
-	err := os.RemoveAll(installLocation)
+	err := paths.RemoveDir(installLocation)
 	if err != nil {
 		helpers.ExitWithError("deleting Terraform version", err)
 	}

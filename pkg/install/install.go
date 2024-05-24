@@ -2,8 +2,6 @@ package install
 
 import (
 	"fmt"
-	"runtime"
-	"slices"
 
 	"github.com/tfversion/tfversion/pkg/client"
 	"github.com/tfversion/tfversion/pkg/helpers"
@@ -18,14 +16,14 @@ func InstallVersion(version string) {
 	}
 
 	// Check if the version exists
-	availableVersions := client.ListAvailableVersions()
-	if !slices.Contains(availableVersions, version) {
+	isAvailable := client.IsAvailableVersion(version)
+	if !isAvailable {
 		err := fmt.Errorf("terraform version %s does not exist, please run %s to check available versions", helpers.ColoredVersion(version), helpers.ColoredListHelper())
 		helpers.ExitWithError("installing", err)
 	}
 
 	// Download the Terraform release
-	zipFile, err := client.Download(version, runtime.GOOS, runtime.GOARCH)
+	zipFile, err := client.Download(version)
 	if err != nil {
 		helpers.ExitWithError("downloading", err)
 	}

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/tfversion/tfversion/pkg/helpers"
@@ -13,17 +14,18 @@ import (
 )
 
 // Download downloads the Terraform release zip file for the given version, OS and architecture.
-func Download(version, goos, goarch string) (string, error) {
+func Download(version string) (string, error) {
 	downloadLocation := paths.GetInstallLocation()
 
-	// construct the download URL based on the version and the OS and architecture
-	downloadURL := fmt.Sprintf("%s/%s/terraform_%s_%s_%s.zip", TerraformReleasesUrl, version, version, goos, goarch)
+	// construct the file name based on the version, OS and architecture
+	fileName := fmt.Sprintf("terraform_%s_%s_%s.zip", version, runtime.GOOS, runtime.GOARCH)
+	downloadURL := fmt.Sprintf("%s/%s/%s", TerraformReleasesUrl, version, fileName)
 
 	var err error
 	for attempt := 1; attempt <= MaxRetries; attempt++ {
-		if err = downloadWithRetry(downloadURL, downloadLocation, version, goos, goarch); err == nil {
+		if err = downloadWithRetry(downloadURL, downloadLocation, fileName); err == nil {
 			fmt.Printf("Terraform version %s downloaded successfully\n", helpers.ColoredVersion(version))
-			return fmt.Sprintf("%s/terraform_%s_%s_%s.zip", downloadLocation, version, goos, goarch), nil
+			return fmt.Sprintf("%s/%s", downloadLocation, fileName), nil
 		}
 
 		fmt.Printf("Attempt %d failed: %s\n", attempt, err)
@@ -31,30 +33,30 @@ func Download(version, goos, goarch string) (string, error) {
 	}
 
 	// if we got here, we failed to download Terraform after MaxRetries attempts
-	return "", fmt.Errorf("failed to download Terraform after %d attempts: %s", MaxRetries, err)
+	return "", fmt.Errorf("failed to download Terraform from %s after %d attempts: %s", downloadURL, MaxRetries, err)
 }
 
-func downloadWithRetry(downloadURL, downloadLocation, version, goos, goarch string) error {
+func downloadWithRetry(downloadURL, downloadLocation, fileName string) error {
 	resp, err := http.Get(downloadURL)
 	if err != nil {
-		return fmt.Errorf("failed to download Terraform: %s", err)
+		return fmt.Errorf("failed to download Terraform %s: %s", fileName, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("failed to download Terraform: %s", resp.Status)
+		return fmt.Errorf("failed to download Terraform %s: %s", fileName, resp.Status)
 	}
 
-	filePath := filepath.Join(downloadLocation, fmt.Sprintf("terraform_%s_%s_%s.zip", version, goos, goarch))
+	filePath := filepath.Join(downloadLocation, fileName)
 	file, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("failed to create file: %s", err)
+		return fmt.Errorf("failed to create file %s: %s", fileName, err)
 	}
 	defer file.Close()
 
 	_, err = io.Copy(file, resp.Body)
 	if err != nil {
-		return fmt.Errorf("failed to write to file: %s", err)
+		return fmt.Errorf("failed to write to file %s: %s", fileName, err)
 	}
 
 	return nil
