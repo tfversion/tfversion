@@ -20,7 +20,7 @@ func AliasVersion(alias string, version string) {
 	aliasPath := filepath.Join(aliasLocation, alias)
 
 	// ensure the symlink target is available
-	err := removeSymlink(aliasPath)
+	err := paths.RemoveSymlink(aliasPath)
 	if err != nil {
 		helpers.ExitWithError("removing symlink", err)
 	}
@@ -69,13 +69,4 @@ func GetVersion(alias string) string {
 	}
 	_, targetVersion := filepath.Split(resolvePath)
 	return targetVersion
-}
-
-func removeSymlink(aliasPath string) error {
-	_, err := os.Lstat(aliasPath)
-	if err != nil {
-		return err
-	}
-	err = os.RemoveAll(aliasPath)
-	return err
 }

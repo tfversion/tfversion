@@ -41,3 +41,23 @@ func IsAlreadyDownloaded(version string) bool {
 	_, err := os.Stat(binaryPath)
 	return !os.IsNotExist(err)
 }
+
+// RemoveSymlink removes the symlink at the given path.
+func RemoveSymlink(path string) error {
+	_, err := os.Lstat(path)
+	if err != nil {
+		return err
+	}
+	err = os.Remove(path)
+	return err
+}
+
+// EnsureDirExists checks if the given directory exists, and creates it if it doesn't.
+func EnsureDirExists(path string) error {
+	_, err := os.Stat(path)
+	if !os.IsNotExist(err) {
+		return err
+	}
+	err = os.MkdirAll(path, 0755)
+	return err
+}

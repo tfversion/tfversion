@@ -47,7 +47,7 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 	binaryTargetPath := filepath.Join(useLocation, paths.TerraformBinaryName)
 
 	// ensure the symlink target is available
-	err := removeSymlink(binaryTargetPath)
+	err := paths.RemoveSymlink(binaryTargetPath)
 	if err != nil {
 		helpers.ExitWithError("removing symlink", err)
 	}
@@ -104,28 +104,10 @@ func GetUseLocation() string {
 	}
 
 	useLocation := filepath.Join(user, paths.ApplicationDir, paths.UseDir)
-	err = ensureDirExists(useLocation)
+	err = paths.EnsureDirExists(useLocation)
 	if err != nil {
 		helpers.ExitWithError("creating use directory", err)
 	}
 
 	return useLocation
-}
-
-func removeSymlink(path string) error {
-	_, err := os.Lstat(path)
-	if err != nil {
-		return err
-	}
-	err = os.Remove(path)
-	return err
-}
-
-func ensureDirExists(path string) error {
-	_, err := os.Stat(path)
-	if !os.IsNotExist(err) {
-		return err
-	}
-	err = os.MkdirAll(path, 0755)
-	return err
 }
