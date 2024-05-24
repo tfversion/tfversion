@@ -54,9 +54,13 @@ func GetAliasVersions() []string {
 	}
 	var versionNames []string
 	for _, v := range aliasedVersions {
-		versionNames = append(versionNames, fmt.Sprintf("%s -> %s", v.Name(), formatAliasVersion(v.Name())))
+		versionNames = append(versionNames, formatAliasListItem(v.Name()))
 	}
 	return versionNames
+}
+
+func formatAliasListItem(alias string) string {
+	return fmt.Sprintf("%s -> %s", alias, formatAliasVersion(alias))
 }
 
 func formatAliasVersion(alias string) string {
