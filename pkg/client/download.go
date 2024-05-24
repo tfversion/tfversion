@@ -14,7 +14,7 @@ import (
 
 // Download downloads the Terraform release zip file for the given version, OS and architecture.
 func Download(version, goos, goarch string) (string, error) {
-	downloadLocation := paths.GetDownloadLocation()
+	downloadLocation := paths.GetInstallLocation()
 
 	// construct the download URL based on the version and the OS and architecture
 	downloadURL := fmt.Sprintf("%s/%s/terraform_%s_%s_%s.zip", TerraformReleasesUrl, version, version, goos, goarch)

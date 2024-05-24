@@ -12,7 +12,7 @@ import (
 
 // InstallVersion installs the specified Terraform version or one of the latest versions
 func InstallVersion(version string) {
-	if paths.IsAlreadyDownloaded(version) {
+	if paths.IsInstalled(version) {
 		err := fmt.Errorf("terraform version %s is already installed", helpers.ColoredVersion(version))
 		helpers.ExitWithError("installing", err)
 	}
@@ -31,7 +31,7 @@ func InstallVersion(version string) {
 	}
 
 	// Unzip the downloaded Terraform release
-	installLocation := paths.GetInstallLocation(version)
+	installLocation := paths.GetInstalledVersionLocation(version)
 	err = client.UnzipRelease(zipFile, installLocation)
 	if err != nil {
 		helpers.ExitWithError("unzipping", err)

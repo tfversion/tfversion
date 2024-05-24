@@ -9,7 +9,7 @@ import (
 
 // AliasVersion creates a symlink to the specified Terraform version.
 func AliasVersion(alias string, version string) {
-	if !paths.IsAlreadyDownloaded(version) {
+	if !paths.IsInstalled(version) {
 		err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
 		helpers.ExitWithError("aliasing", err)
 	}
@@ -20,7 +20,7 @@ func AliasVersion(alias string, version string) {
 		helpers.ExitWithError("removing symlink", err)
 	}
 
-	binaryVersionPath := paths.GetInstallLocation(version)
+	binaryVersionPath := paths.GetInstalledVersionLocation(version)
 	err = paths.CreateSymlink(binaryVersionPath, aliasPath)
 	if err != nil {
 		helpers.ExitWithError("creating symlink", err)
