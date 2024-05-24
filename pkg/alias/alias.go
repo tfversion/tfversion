@@ -5,31 +5,28 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
+	"github.com/tfversion/tfversion/pkg/paths"
 )
 
 // AliasVersion creates a symlink to the specified Terraform version.
 func AliasVersion(alias string, version string) {
-	if !download.IsAlreadyDownloaded(version) {
+	if !paths.IsAlreadyDownloaded(version) {
 		err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
 		helpers.ExitWithError("aliasing", err)
 	}
 
 	aliasLocation := GetAliasLocation()
-
-	// delete existing alias symlink, we consider it non-destructive anyways since you can easily restore it
 	aliasPath := filepath.Join(aliasLocation, alias)
-	_, err := os.Lstat(aliasPath)
-	if err == nil {
-		err = os.RemoveAll(aliasPath)
-		if err != nil {
-			helpers.ExitWithError("removing symlink", err)
-		}
+
+	// ensure the symlink target is available
+	err := removeSymlink(aliasPath)
+	if err != nil {
+		helpers.ExitWithError("removing symlink", err)
 	}
 
 	// create the symlink
-	binaryVersionPath := download.GetInstallLocation(version)
+	binaryVersionPath := paths.GetInstallLocation(version)
 	err = os.Symlink(binaryVersionPath, aliasPath)
 	if err != nil {
 		helpers.ExitWithError("creating symlink", err)
@@ -45,7 +42,7 @@ func GetAliasLocation() string {
 		helpers.ExitWithError("getting user home directory", err)
 	}
 
-	aliasLocation := filepath.Join(user, download.ApplicationDir, download.AliasesDir)
+	aliasLocation := filepath.Join(user, paths.ApplicationDir, paths.AliasesDir)
 	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
 		err := os.MkdirAll(aliasLocation, 0755)
 		if err != nil {
@@ -72,4 +69,13 @@ func GetVersion(alias string) string {
 	}
 	_, targetVersion := filepath.Split(resolvePath)
 	return targetVersion
+}
+
+func removeSymlink(aliasPath string) error {
+	_, err := os.Lstat(aliasPath)
+	if err != nil {
+		return err
+	}
+	err = os.RemoveAll(aliasPath)
+	return err
 }

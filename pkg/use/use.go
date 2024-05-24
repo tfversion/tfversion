@@ -8,10 +8,10 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/tfversion/tfversion/pkg/alias"
-	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/install"
 	"github.com/tfversion/tfversion/pkg/list"
+	"github.com/tfversion/tfversion/pkg/paths"
 )
 
 // UseVersion activates the specified Terraform version or one of the latest versions
@@ -26,7 +26,7 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 	}
 
 	// check if the version is installed
-	if !download.IsAlreadyDownloaded(version) {
+	if !paths.IsAlreadyDownloaded(version) {
 		if !autoInstall {
 			err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
 			helpers.ExitWithError("using", err)
@@ -44,18 +44,16 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 		os.Exit(1)
 	}
 
+	binaryTargetPath := filepath.Join(useLocation, paths.TerraformBinaryName)
+
 	// ensure the symlink target is available
-	binaryTargetPath := filepath.Join(useLocation, download.TerraformBinaryName)
-	_, err := os.Lstat(binaryTargetPath)
-	if err == nil {
-		err = os.Remove(binaryTargetPath)
-		if err != nil {
-			helpers.ExitWithError("removing symlink", err)
-		}
+	err := removeSymlink(binaryTargetPath)
+	if err != nil {
+		helpers.ExitWithError("removing symlink", err)
 	}
 
 	// create the symlink
-	binaryVersionPath := download.GetBinaryLocation(version)
+	binaryVersionPath := paths.GetBinaryLocation(version)
 	err = os.Symlink(binaryVersionPath, binaryTargetPath)
 	if err != nil {
 		helpers.ExitWithError("creating symlink", err)
@@ -105,13 +103,29 @@ func GetUseLocation() string {
 		helpers.ExitWithError("user home directory", err)
 	}
 
-	useLocation := filepath.Join(user, download.ApplicationDir, download.UseDir)
-	if _, err := os.Stat(useLocation); os.IsNotExist(err) {
-		err := os.MkdirAll(useLocation, 0755)
-		if err != nil {
-			helpers.ExitWithError("creating use directory", err)
-		}
+	useLocation := filepath.Join(user, paths.ApplicationDir, paths.UseDir)
+	err = ensureDirExists(useLocation)
+	if err != nil {
+		helpers.ExitWithError("creating use directory", err)
 	}
 
 	return useLocation
+}
+
+func removeSymlink(path string) error {
+	_, err := os.Lstat(path)
+	if err != nil {
+		return err
+	}
+	err = os.Remove(path)
+	return err
+}
+
+func ensureDirExists(path string) error {
+	_, err := os.Stat(path)
+	if !os.IsNotExist(err) {
+		return err
+	}
+	err = os.MkdirAll(path, 0755)
+	return err
 }

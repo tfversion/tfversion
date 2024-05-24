@@ -9,46 +9,12 @@ import (
 	"time"
 
 	"github.com/tfversion/tfversion/pkg/helpers"
+	"github.com/tfversion/tfversion/pkg/paths"
 )
-
-// IsAlreadyDownloaded checks if the given Terraform version is already downloaded and unzipped.
-func IsAlreadyDownloaded(version string) bool {
-	binaryPath := GetBinaryLocation(version)
-	_, err := os.Stat(binaryPath)
-	return !os.IsNotExist(err)
-}
-
-// GetDownloadLocation returns the directory where tfversion downloads Terraform releases to.
-func GetDownloadLocation() string {
-	user, err := os.UserHomeDir()
-	if err != nil {
-		helpers.ExitWithError("error getting user home directory", err)
-	}
-
-	downloadLocation := filepath.Join(user, ApplicationDir, VersionsDir)
-	if _, err := os.Stat(downloadLocation); os.IsNotExist(err) {
-		err := os.MkdirAll(downloadLocation, 0755)
-		if err != nil {
-			helpers.ExitWithError("error creating download directory", err)
-		}
-	}
-
-	return downloadLocation
-}
-
-// GetInstallLocation returns the directory where a specific Terraform version is installed to.
-func GetInstallLocation(version string) string {
-	return filepath.Join(GetDownloadLocation(), version)
-}
-
-// GetBinaryLocation returns the path to the Terraform binary for the given version.
-func GetBinaryLocation(version string) string {
-	return filepath.Join(GetInstallLocation(version), TerraformBinaryName)
-}
 
 // Download downloads the Terraform release zip file for the given version, OS and architecture.
 func Download(version, goos, goarch string) (string, error) {
-	downloadLocation := GetDownloadLocation()
+	downloadLocation := paths.GetDownloadLocation()
 
 	// construct the download URL based on the version and the OS and architecture
 	downloadURL := fmt.Sprintf("%s/%s/terraform_%s_%s_%s.zip", TerraformReleasesUrl, version, version, goos, goarch)

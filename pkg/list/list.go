@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/tfversion/tfversion/pkg/alias"
-	"github.com/tfversion/tfversion/pkg/download"
 	"github.com/tfversion/tfversion/pkg/helpers"
+	"github.com/tfversion/tfversion/pkg/paths"
 	"golang.org/x/net/html"
 )
 
@@ -42,7 +42,7 @@ func GetAliasedVersions() []string {
 
 // GetInstalledVersions returns the installed Terraform versions from the `~/.tfversion/versions` directory
 func GetInstalledVersions() []string {
-	installLocation := download.GetDownloadLocation()
+	installLocation := paths.GetDownloadLocation()
 	installedVersions, err := os.ReadDir(installLocation)
 	if err != nil {
 		helpers.ExitWithError("listing versions directory", err)
@@ -70,7 +70,7 @@ func GetInstalledVersions() []string {
 
 // GetAvailableVersions returns the available Terraform versions from the official Terraform releases page
 func GetAvailableVersions() []string {
-	resp, err := http.Get(download.TerraformReleasesUrl)
+	resp, err := http.Get(TerraformReleasesUrl)
 	if err != nil {
 		helpers.ExitWithError("getting Terraform releases page", err)
 	}

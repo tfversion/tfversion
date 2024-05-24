@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/tfversion/tfversion/pkg/paths"
 )
 
 // UnzipRelease extracts the Terraform binary from the zip file to the specified destination.
@@ -32,7 +34,7 @@ func UnzipRelease(source, destination string) error {
 
 	// Iterate over zip files inside the archive and unzip only the "terraform" binary.
 	for _, f := range reader.File {
-		if f.Name == TerraformBinaryName {
+		if f.Name == paths.TerraformBinaryName {
 			return unzipFile(f, destination)
 		}
 	}
