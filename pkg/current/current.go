@@ -9,6 +9,6 @@ import (
 
 // CheckCurrentVersion prints the current active version of Terraform.
 func CheckCurrentVersion() {
-	version := paths.GetUseVersion()
+	version := paths.GetActiveVersion()
 	fmt.Printf("Current active Terraform version: %s\n", helpers.ColoredVersion(version))
 }

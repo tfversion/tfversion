@@ -17,20 +17,6 @@ func GetInstallLocation() string {
 	return downloadLocation
 }
 
-// GetInstalledVersions returns a list of all installed Terraform versions.
-func GetInstalledVersions() []string {
-	installLocation := GetInstallLocation()
-	installedVersions, err := os.ReadDir(installLocation)
-	if err != nil {
-		helpers.ExitWithError("listing versions directory", err)
-	}
-	var versionNames []string
-	for _, v := range installedVersions {
-		versionNames = append(versionNames, v.Name())
-	}
-	return versionNames
-}
-
 // IsInstalled checks if the given Terraform version is already installed.
 func IsInstalled(version string) bool {
 	binaryPath := GetBinaryLocation(version)
