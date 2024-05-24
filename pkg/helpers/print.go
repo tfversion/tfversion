@@ -24,6 +24,10 @@ func ColoredListHelper() string {
 	return color.CyanString("`tfversion list`")
 }
 
+func ColoredUnavailableVersion() string {
+	return color.HiRedString("[removed]")
+}
+
 // ExitWithError prints an error message and exits with status code 1
 func ExitWithError(message string, err error) {
 	fmt.Printf("%s %s: %s\n", color.HiRedString("error:"), message, err)

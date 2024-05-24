@@ -10,8 +10,7 @@ import (
 
 // GetInstalledVersions returns a list of all installed Terraform versions.
 func GetInstalledVersions() []string {
-	installLocation := GetInstallLocation()
-	installedVersions, err := os.ReadDir(installLocation)
+	installedVersions, err := ListFiles(GetInstallLocation())
 	if err != nil {
 		helpers.ExitWithError("listing versions directory", err)
 	}
@@ -49,14 +48,20 @@ func GetAliasVersion(alias string) string {
 
 // GetAliasVersions returns a list of all aliases and their corresponding Terraform versions.
 func GetAliasVersions() []string {
-	aliasLocation := GetAliasLocation()
-	aliasedVersions, err := os.ReadDir(aliasLocation)
+	aliasedVersions, err := ListFiles(GetAliasLocation())
 	if err != nil {
 		helpers.ExitWithError("listing alias directory", err)
 	}
 	var versionNames []string
 	for _, v := range aliasedVersions {
-		versionNames = append(versionNames, fmt.Sprintf("%s -> %s", v.Name(), GetAliasVersion(v.Name())))
+		versionNames = append(versionNames, fmt.Sprintf("%s -> %s", v.Name(), formatAliasVersion(v.Name())))
 	}
 	return versionNames
+}
+
+func formatAliasVersion(alias string) string {
+	if IsAlias(alias) {
+		return GetAliasVersion(alias)
+	}
+	return helpers.ColoredUnavailableVersion()
 }

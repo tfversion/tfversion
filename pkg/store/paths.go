@@ -35,3 +35,25 @@ func EnsureDirExists(path string) error {
 func RemoveDir(path string) error {
 	return os.RemoveAll(path)
 }
+
+// CreateSymlink creates a symlink at the given path pointing to the source path.
+func CreateSymlink(sourcePath, targetPath string) error {
+	return os.Symlink(sourcePath, targetPath)
+}
+
+// RemoveSymlink removes the symlink at the given path.
+func RemoveSymlink(path string) error {
+	_, err := os.Lstat(path)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	err = os.Remove(path)
+	return err
+}
+
+func ListFiles(path string) ([]os.DirEntry, error) {
+	return os.ReadDir(path)
+}

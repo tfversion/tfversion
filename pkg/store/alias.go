@@ -7,21 +7,6 @@ import (
 	"tfversion/pkg/helpers"
 )
 
-// CreateSymlink creates a symlink at the given path pointing to the source path.
-func CreateSymlink(sourcePath, targetPath string) error {
-	return os.Symlink(sourcePath, targetPath)
-}
-
-// RemoveSymlink removes the symlink at the given path.
-func RemoveSymlink(path string) error {
-	_, err := os.Lstat(path)
-	if err != nil {
-		return err
-	}
-	err = os.Remove(path)
-	return err
-}
-
 // GetAliasLocation returns the directory where tfversion stores the aliases.
 func GetAliasLocation() string {
 	aliasLocation := filepath.Join(GetApplicationLocation(), AliasesDir)
@@ -40,5 +25,12 @@ func GetAliasPath(alias string) string {
 // isAlias checks if the given alias is valid.
 func IsAlias(alias string) bool {
 	_, err := os.Lstat(GetAliasPath(alias))
-	return !os.IsNotExist(err)
+	if err != nil {
+		return false
+	}
+	_, err = filepath.EvalSymlinks(GetAliasPath(alias))
+	if err != nil {
+		return false
+	}
+	return true
 }
