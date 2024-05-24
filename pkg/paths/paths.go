@@ -60,6 +60,11 @@ func IsAlreadyDownloaded(version string) bool {
 	return !os.IsNotExist(err)
 }
 
+// CreateSymlink creates a symlink at the given path pointing to the source path.
+func CreateSymlink(sourcePath, targetPath string) error {
+	return os.Symlink(sourcePath, targetPath)
+}
+
 // RemoveSymlink removes the symlink at the given path.
 func RemoveSymlink(path string) error {
 	_, err := os.Lstat(path)

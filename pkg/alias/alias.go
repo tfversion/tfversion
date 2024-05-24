@@ -2,7 +2,6 @@ package alias
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/paths"
@@ -16,16 +15,13 @@ func AliasVersion(alias string, version string) {
 	}
 
 	aliasPath := paths.GetAliasLocation(alias)
-
-	// ensure the symlink target is available
 	err := paths.RemoveSymlink(aliasPath)
 	if err != nil {
 		helpers.ExitWithError("removing symlink", err)
 	}
 
-	// create the symlink
 	binaryVersionPath := paths.GetInstallLocation(version)
-	err = os.Symlink(binaryVersionPath, aliasPath)
+	err = paths.CreateSymlink(binaryVersionPath, aliasPath)
 	if err != nil {
 		helpers.ExitWithError("creating symlink", err)
 	}
