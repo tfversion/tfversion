@@ -10,14 +10,10 @@ import (
 )
 
 // UseVersion activates the specified Terraform version or one of the latest versions
-func UseVersion(versionOrAlias string, autoInstall bool) {
-
+func UseVersion(version string, autoInstall bool) {
 	// find the version (via alias or directly)
-	var version string
-	if paths.IsAlias(versionOrAlias) {
-		version = paths.GetAliasVersion(versionOrAlias)
-	} else {
-		version = versionOrAlias
+	if paths.IsAlias(version) {
+		version = paths.GetAliasVersion(version)
 	}
 
 	// check if the version is installed
