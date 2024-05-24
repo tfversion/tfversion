@@ -21,11 +21,13 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 	}
 
 	// check if the version is installed
-	if !paths.IsInstalled(version) {
-		if !autoInstall {
-			err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
-			helpers.ExitWithError("using", err)
-		}
+	if !paths.IsInstalled(version) && !autoInstall {
+		err := fmt.Errorf("terraform version %s not found, run %s to install", helpers.ColoredVersion(version), helpers.ColoredInstallHelper(version))
+		helpers.ExitWithError("using", err)
+	}
+
+	// install the version if requested
+	if autoInstall {
 		install.InstallVersion(version)
 	}
 
