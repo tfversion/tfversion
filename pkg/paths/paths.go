@@ -25,6 +25,24 @@ func GetDownloadLocation() string {
 	return downloadLocation
 }
 
+// GetAliasLocation returns the directory where tfversion stores the aliases.
+func GetAliasLocation(alias string) string {
+	user, err := os.UserHomeDir()
+	if err != nil {
+		helpers.ExitWithError("getting user home directory", err)
+	}
+
+	aliasLocation := filepath.Join(user, ApplicationDir, AliasesDir)
+	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
+		err := os.MkdirAll(aliasLocation, 0755)
+		if err != nil {
+			helpers.ExitWithError("creating alias directory", err)
+		}
+	}
+
+	return filepath.Join(aliasLocation, alias)
+}
+
 // GetInstallLocation returns the directory where a specific Terraform version is installed to.
 func GetInstallLocation(version string) string {
 	return filepath.Join(GetDownloadLocation(), version)

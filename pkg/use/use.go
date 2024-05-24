@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/tfversion/tfversion/pkg/alias"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/install"
 	"github.com/tfversion/tfversion/pkg/list"
@@ -19,8 +18,8 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 
 	// find the version (via alias or directly)
 	var version string
-	if alias.IsAlias(versionOrAlias) {
-		version = alias.GetVersion(versionOrAlias)
+	if isAlias(versionOrAlias) {
+		version = getAliasVersion(versionOrAlias)
 	} else {
 		version = versionOrAlias
 	}
@@ -110,4 +109,22 @@ func GetUseLocation() string {
 	}
 
 	return useLocation
+}
+
+// isAlias checks if the given alias is valid.
+func isAlias(alias string) bool {
+	aliasPath := paths.GetAliasLocation(alias)
+	_, err := os.Lstat(aliasPath)
+	return !os.IsNotExist(err)
+}
+
+// getAliasVersion returns the Terraform version for the given alias.
+func getAliasVersion(alias string) string {
+	aliasPath := paths.GetAliasLocation(alias)
+	resolvePath, err := filepath.EvalSymlinks(aliasPath)
+	if err != nil {
+		helpers.ExitWithError("resolving symlink", err)
+	}
+	_, targetVersion := filepath.Split(resolvePath)
+	return targetVersion
 }

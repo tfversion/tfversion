@@ -3,7 +3,6 @@ package alias
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/paths"
@@ -16,8 +15,7 @@ func AliasVersion(alias string, version string) {
 		helpers.ExitWithError("aliasing", err)
 	}
 
-	aliasLocation := GetAliasLocation()
-	aliasPath := filepath.Join(aliasLocation, alias)
+	aliasPath := paths.GetAliasLocation(alias)
 
 	// ensure the symlink target is available
 	err := paths.RemoveSymlink(aliasPath)
@@ -33,40 +31,4 @@ func AliasVersion(alias string, version string) {
 	}
 
 	fmt.Printf("Aliased Terraform version %s as %s\n", helpers.ColoredVersion(version), helpers.ColoredVersion(alias))
-}
-
-// GetAliasLocation returns the directory where tfversion stores the aliases.
-func GetAliasLocation() string {
-	user, err := os.UserHomeDir()
-	if err != nil {
-		helpers.ExitWithError("getting user home directory", err)
-	}
-
-	aliasLocation := filepath.Join(user, paths.ApplicationDir, paths.AliasesDir)
-	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
-		err := os.MkdirAll(aliasLocation, 0755)
-		if err != nil {
-			helpers.ExitWithError("creating alias directory", err)
-		}
-	}
-
-	return aliasLocation
-}
-
-// IsAlias checks if the given alias is valid.
-func IsAlias(alias string) bool {
-	aliasPath := filepath.Join(GetAliasLocation(), alias)
-	_, err := os.Lstat(aliasPath)
-	return !os.IsNotExist(err)
-}
-
-// GetVersion returns the Terraform version for the given alias.
-func GetVersion(alias string) string {
-	aliasLocation := GetAliasLocation()
-	resolvePath, err := filepath.EvalSymlinks(filepath.Join(aliasLocation, alias))
-	if err != nil {
-		helpers.ExitWithError("resolving symlink", err)
-	}
-	_, targetVersion := filepath.Split(resolvePath)
-	return targetVersion
 }
