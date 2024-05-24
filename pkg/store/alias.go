@@ -29,8 +29,5 @@ func IsAlias(alias string) bool {
 		return false
 	}
 	_, err = filepath.EvalSymlinks(GetAliasPath(alias))
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
