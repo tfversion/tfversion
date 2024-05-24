@@ -7,12 +7,11 @@ import (
 
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/paths"
-	"github.com/tfversion/tfversion/pkg/use"
 )
 
 // CheckCurrentVersion prints the current active version of Terraform.
 func CheckCurrentVersion() {
-	symlinkPath := filepath.Join(use.GetUseLocation(), paths.TerraformBinaryName)
+	symlinkPath := filepath.Join(paths.GetUseLocation(), paths.TerraformBinaryName)
 	_, err := os.Lstat(symlinkPath)
 	if err != nil {
 		helpers.ExitWithError("no current terraform version found", err)

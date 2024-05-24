@@ -35,7 +35,7 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 
 	// inform the user that they need to update their PATH
 	path := os.Getenv("PATH")
-	useLocation := GetUseLocation()
+	useLocation := paths.GetUseLocation()
 	if !strings.Contains(path, useLocation) {
 		fmt.Printf("%s not found in your shell PATH\n", color.CyanString(useLocation))
 		fmt.Printf("Please run %s to make this version available in your shell\n", color.CyanString("`export PATH=%s:$PATH`", useLocation))
@@ -94,21 +94,6 @@ func UseRequiredVersion(autoInstall bool) {
 	}
 
 	UseVersion(foundVersion, autoInstall)
-}
-
-func GetUseLocation() string {
-	user, err := os.UserHomeDir()
-	if err != nil {
-		helpers.ExitWithError("user home directory", err)
-	}
-
-	useLocation := filepath.Join(user, paths.ApplicationDir, paths.UseDir)
-	err = paths.EnsureDirExists(useLocation)
-	if err != nil {
-		helpers.ExitWithError("creating use directory", err)
-	}
-
-	return useLocation
 }
 
 // isAlias checks if the given alias is valid.

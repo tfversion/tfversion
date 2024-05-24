@@ -43,6 +43,22 @@ func GetAliasLocation(alias string) string {
 	return filepath.Join(aliasLocation, alias)
 }
 
+// GetUseLocation returns the directory where tfversion stores the symlink to the currently used Terraform version.
+func GetUseLocation() string {
+	user, err := os.UserHomeDir()
+	if err != nil {
+		helpers.ExitWithError("user home directory", err)
+	}
+
+	useLocation := filepath.Join(user, ApplicationDir, UseDir)
+	err = EnsureDirExists(useLocation)
+	if err != nil {
+		helpers.ExitWithError("creating use directory", err)
+	}
+
+	return useLocation
+}
+
 // GetInstallLocation returns the directory where a specific Terraform version is installed to.
 func GetInstallLocation(version string) string {
 	return filepath.Join(GetDownloadLocation(), version)
