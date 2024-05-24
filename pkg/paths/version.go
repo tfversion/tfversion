@@ -1,6 +1,7 @@
 package paths
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -34,4 +35,28 @@ func GetActiveVersion() string {
 	}
 	_, version := filepath.Split(filepath.Dir(realPath))
 	return version
+}
+
+// GetAliasVersion returns the Terraform version for the given alias.
+func GetAliasVersion(alias string) string {
+	resolvePath, err := filepath.EvalSymlinks(GetAliasPath(alias))
+	if err != nil {
+		helpers.ExitWithError("resolving symlink", err)
+	}
+	_, targetVersion := filepath.Split(resolvePath)
+	return targetVersion
+}
+
+// GetAliasVersions returns a list of all aliases and their corresponding Terraform versions.
+func GetAliasVersions() []string {
+	aliasLocation := GetAliasLocation()
+	aliasedVersions, err := os.ReadDir(aliasLocation)
+	if err != nil {
+		helpers.ExitWithError("listing alias directory", err)
+	}
+	var versionNames []string
+	for _, v := range aliasedVersions {
+		versionNames = append(versionNames, fmt.Sprintf("%s -> %s", v.Name(), GetAliasVersion(v.Name())))
+	}
+	return versionNames
 }

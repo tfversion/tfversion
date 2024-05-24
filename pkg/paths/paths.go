@@ -31,6 +31,7 @@ func EnsureDirExists(path string) error {
 	return err
 }
 
+// RemoveDir removes the given directory and all its contents.
 func RemoveDir(path string) error {
 	return os.RemoveAll(path)
 }
