@@ -2,7 +2,6 @@ package alias
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/paths"
@@ -15,7 +14,7 @@ func AliasVersion(alias string, version string) {
 		helpers.ExitWithError("aliasing", err)
 	}
 
-	aliasPath := filepath.Join(paths.GetAliasLocation(), alias)
+	aliasPath := paths.GetAliasPath(alias)
 	err := paths.RemoveSymlink(aliasPath)
 	if err != nil {
 		helpers.ExitWithError("removing symlink", err)

@@ -1,6 +1,7 @@
 package paths
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -25,29 +26,43 @@ func RemoveSymlink(path string) error {
 // GetAliasLocation returns the directory where tfversion stores the aliases.
 func GetAliasLocation() string {
 	aliasLocation := filepath.Join(GetApplicationLocation(), AliasesDir)
-	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
-		err := os.MkdirAll(aliasLocation, 0755)
-		if err != nil {
-			helpers.ExitWithError("creating alias directory", err)
-		}
+	err := EnsureDirExists(aliasLocation)
+	if err != nil {
+		helpers.ExitWithError("creating alias directory", err)
 	}
 	return aliasLocation
 }
 
+func GetAliasPath(alias string) string {
+	return filepath.Join(GetAliasLocation(), alias)
+}
+
 // isAlias checks if the given alias is valid.
 func IsAlias(alias string) bool {
-	aliasPath := filepath.Join(GetAliasLocation(), alias)
-	_, err := os.Lstat(aliasPath)
+	_, err := os.Lstat(GetAliasPath(alias))
 	return !os.IsNotExist(err)
 }
 
-// getAliasVersion returns the Terraform version for the given alias.
+// GetAliasVersion returns the Terraform version for the given alias.
 func GetAliasVersion(alias string) string {
-	aliasPath := filepath.Join(GetAliasLocation(), alias)
-	resolvePath, err := filepath.EvalSymlinks(aliasPath)
+	resolvePath, err := filepath.EvalSymlinks(GetAliasPath(alias))
 	if err != nil {
 		helpers.ExitWithError("resolving symlink", err)
 	}
 	_, targetVersion := filepath.Split(resolvePath)
 	return targetVersion
+}
+
+// GetAliasVersions returns a list of all aliases and their corresponding Terraform versions.
+func GetAliasVersions() []string {
+	aliasLocation := GetAliasLocation()
+	aliasedVersions, err := os.ReadDir(aliasLocation)
+	if err != nil {
+		helpers.ExitWithError("listing alias directory", err)
+	}
+	var versionNames []string
+	for _, v := range aliasedVersions {
+		versionNames = append(versionNames, fmt.Sprintf("%s -> %s", v.Name(), GetAliasVersion(v.Name())))
+	}
+	return versionNames
 }

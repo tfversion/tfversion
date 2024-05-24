@@ -13,19 +13,21 @@ func GetApplicationLocation() string {
 	if err != nil {
 		helpers.ExitWithError("error getting user home directory", err)
 	}
-	return filepath.Join(user, ApplicationDir)
+	applicationLocation := filepath.Join(user, ApplicationDir)
+	err = EnsureDirExists(applicationLocation)
+	if err != nil {
+		helpers.ExitWithError("creating application directory", err)
+	}
+	return applicationLocation
 }
 
 // GetDownloadLocation returns the directory where tfversion downloads Terraform releases to.
 func GetDownloadLocation() string {
 	downloadLocation := filepath.Join(GetApplicationLocation(), VersionsDir)
-	if _, err := os.Stat(downloadLocation); os.IsNotExist(err) {
-		err := os.MkdirAll(downloadLocation, 0755)
-		if err != nil {
-			helpers.ExitWithError("error creating download directory", err)
-		}
+	err := EnsureDirExists(downloadLocation)
+	if err != nil {
+		helpers.ExitWithError("creating download directory", err)
 	}
-
 	return downloadLocation
 }
 
@@ -52,6 +54,20 @@ func GetBinaryLocation(version string) string {
 // GetActiveBinaryLocation returns the path to the currently active Terraform binary.
 func GetActiveBinaryLocation() string {
 	return filepath.Join(GetUseLocation(), TerraformBinaryName)
+}
+
+// GetInstalledVersions returns a list of all installed Terraform versions.
+func GetInstalledVersions() []string {
+	installLocation := GetDownloadLocation()
+	installedVersions, err := os.ReadDir(installLocation)
+	if err != nil {
+		helpers.ExitWithError("listing versions directory", err)
+	}
+	var versionNames []string
+	for _, v := range installedVersions {
+		versionNames = append(versionNames, v.Name())
+	}
+	return versionNames
 }
 
 // IsAlreadyDownloaded checks if the given Terraform version is already downloaded and unzipped.
