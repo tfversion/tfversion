@@ -2,7 +2,6 @@ package unalias
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/tfversion/tfversion/pkg/helpers"
@@ -11,13 +10,12 @@ import (
 
 // Unalias removes the symlink for the specified alias.
 func Unalias(aliasName string) {
-	aliasPath := filepath.Join(paths.GetAliasLocation(), aliasName)
-	_, err := os.Lstat(aliasPath)
-	if err != nil {
-		helpers.ExitWithError("removing symlink", err)
+	if !paths.IsAlias(aliasName) {
+		return
 	}
 
-	err = os.RemoveAll(aliasPath)
+	aliasPath := filepath.Join(paths.GetAliasLocation(), aliasName)
+	err := paths.RemoveSymlink(aliasPath)
 	if err != nil {
 		helpers.ExitWithError("removing symlink", err)
 	}

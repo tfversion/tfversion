@@ -2,7 +2,6 @@ package use
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/tfversion/tfversion/pkg/client"
 	"github.com/tfversion/tfversion/pkg/helpers"
@@ -30,12 +29,11 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 		install.InstallVersion(version)
 	}
 
-	// check the symlink target
-	useLocation := paths.GetUseLocation()
-	helpers.WarnIfNotInPath(useLocation)
-	binaryTargetPath := filepath.Join(useLocation, paths.TerraformBinaryName)
+	// check the PATH environment
+	helpers.WarnIfNotInPath(paths.GetUseLocation())
 
 	// ensure the symlink target is available
+	binaryTargetPath := paths.GetActiveBinaryLocation()
 	err := paths.RemoveSymlink(binaryTargetPath)
 	if err != nil {
 		helpers.ExitWithError("removing symlink", err)

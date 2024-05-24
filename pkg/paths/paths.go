@@ -7,14 +7,18 @@ import (
 	"github.com/tfversion/tfversion/pkg/helpers"
 )
 
-// GetDownloadLocation returns the directory where tfversion downloads Terraform releases to.
-func GetDownloadLocation() string {
+// ApplicationDir is the name of the directory where tfversion stores its data.
+func GetApplicationLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
 		helpers.ExitWithError("error getting user home directory", err)
 	}
+	return filepath.Join(user, ApplicationDir)
+}
 
-	downloadLocation := filepath.Join(user, ApplicationDir, VersionsDir)
+// GetDownloadLocation returns the directory where tfversion downloads Terraform releases to.
+func GetDownloadLocation() string {
+	downloadLocation := filepath.Join(GetApplicationLocation(), VersionsDir)
 	if _, err := os.Stat(downloadLocation); os.IsNotExist(err) {
 		err := os.MkdirAll(downloadLocation, 0755)
 		if err != nil {
@@ -27,17 +31,11 @@ func GetDownloadLocation() string {
 
 // GetUseLocation returns the directory where tfversion stores the symlink to the currently used Terraform version.
 func GetUseLocation() string {
-	user, err := os.UserHomeDir()
-	if err != nil {
-		helpers.ExitWithError("user home directory", err)
-	}
-
-	useLocation := filepath.Join(user, ApplicationDir, UseDir)
-	err = EnsureDirExists(useLocation)
+	useLocation := filepath.Join(GetApplicationLocation(), UseDir)
+	err := EnsureDirExists(useLocation)
 	if err != nil {
 		helpers.ExitWithError("creating use directory", err)
 	}
-
 	return useLocation
 }
 
@@ -49,6 +47,11 @@ func GetInstallLocation(version string) string {
 // GetBinaryLocation returns the path to the Terraform binary for the given version.
 func GetBinaryLocation(version string) string {
 	return filepath.Join(GetInstallLocation(version), TerraformBinaryName)
+}
+
+// GetActiveBinaryLocation returns the path to the currently active Terraform binary.
+func GetActiveBinaryLocation() string {
+	return filepath.Join(GetUseLocation(), TerraformBinaryName)
 }
 
 // IsAlreadyDownloaded checks if the given Terraform version is already downloaded and unzipped.

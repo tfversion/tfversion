@@ -24,19 +24,13 @@ func RemoveSymlink(path string) error {
 
 // GetAliasLocation returns the directory where tfversion stores the aliases.
 func GetAliasLocation() string {
-	user, err := os.UserHomeDir()
-	if err != nil {
-		helpers.ExitWithError("getting user home directory", err)
-	}
-
-	aliasLocation := filepath.Join(user, ApplicationDir, AliasesDir)
+	aliasLocation := filepath.Join(GetApplicationLocation(), AliasesDir)
 	if _, err := os.Stat(aliasLocation); os.IsNotExist(err) {
 		err := os.MkdirAll(aliasLocation, 0755)
 		if err != nil {
 			helpers.ExitWithError("creating alias directory", err)
 		}
 	}
-
 	return aliasLocation
 }
 

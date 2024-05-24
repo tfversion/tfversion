@@ -11,13 +11,13 @@ import (
 
 // CheckCurrentVersion prints the current active version of Terraform.
 func CheckCurrentVersion() {
-	symlinkPath := filepath.Join(paths.GetUseLocation(), paths.TerraformBinaryName)
-	_, err := os.Lstat(symlinkPath)
+	binaryPath := paths.GetActiveBinaryLocation()
+	_, err := os.Lstat(binaryPath)
 	if err != nil {
 		helpers.ExitWithError("no current terraform version found", err)
 	}
 
-	realPath, err := filepath.EvalSymlinks(symlinkPath)
+	realPath, err := filepath.EvalSymlinks(binaryPath)
 	if err != nil {
 		helpers.ExitWithError("resolving symlink", err)
 	}
