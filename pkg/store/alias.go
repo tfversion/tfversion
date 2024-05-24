@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tfversion/tfversion/pkg/helpers"
+	"tfversion/pkg/helpers"
 )
 
 // CreateSymlink creates a symlink at the given path pointing to the source path.

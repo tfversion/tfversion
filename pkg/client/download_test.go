@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/tfversion/tfversion/pkg/store"
+	"tfversion/pkg/store"
 )
 
 func TestGetDownloadLocation(t *testing.T) {

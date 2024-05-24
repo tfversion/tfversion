@@ -3,10 +3,10 @@ package use
 import (
 	"fmt"
 
-	"github.com/tfversion/tfversion/pkg/client"
-	"github.com/tfversion/tfversion/pkg/helpers"
-	"github.com/tfversion/tfversion/pkg/install"
-	"github.com/tfversion/tfversion/pkg/store"
+	"tfversion/pkg/client"
+	"tfversion/pkg/helpers"
+	"tfversion/pkg/install"
+	"tfversion/pkg/store"
 )
 
 // UseVersion activates the specified Terraform version or one of the latest versions

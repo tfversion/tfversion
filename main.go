@@ -1,6 +1,6 @@
 package main
 
-import "github.com/tfversion/tfversion/cmd"
+import "tfversion/cmd"
 
 func main() {
 	cmd.Execute()

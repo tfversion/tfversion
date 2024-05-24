@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/net/html"
 
-	"github.com/tfversion/tfversion/pkg/helpers"
+	"tfversion/pkg/helpers"
 )
 
 // GetAvailableVersions returns the available Terraform versions from the official Terraform releases page

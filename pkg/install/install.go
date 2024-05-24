@@ -3,9 +3,9 @@ package install
 import (
 	"fmt"
 
-	"github.com/tfversion/tfversion/pkg/client"
-	"github.com/tfversion/tfversion/pkg/helpers"
-	"github.com/tfversion/tfversion/pkg/store"
+	"tfversion/pkg/client"
+	"tfversion/pkg/helpers"
+	"tfversion/pkg/store"
 )
 
 // InstallVersion installs the specified Terraform version or one of the latest versions
