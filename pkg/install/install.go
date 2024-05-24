@@ -5,9 +5,8 @@ import (
 	"runtime"
 	"slices"
 
-	"github.com/tfversion/tfversion/pkg/download"
+	"github.com/tfversion/tfversion/pkg/client"
 	"github.com/tfversion/tfversion/pkg/helpers"
-	"github.com/tfversion/tfversion/pkg/list"
 	"github.com/tfversion/tfversion/pkg/paths"
 )
 
@@ -19,27 +18,27 @@ func InstallVersion(version string) {
 	}
 
 	// Check if the version exists
-	availableVersions := list.GetAvailableVersions()
+	availableVersions := client.ListAvailableVersions()
 	if !slices.Contains(availableVersions, version) {
 		err := fmt.Errorf("terraform version %s does not exist, please run %s to check available versions", helpers.ColoredVersion(version), helpers.ColoredListHelper())
 		helpers.ExitWithError("installing", err)
 	}
 
 	// Download the Terraform release
-	zipFile, err := download.Download(version, runtime.GOOS, runtime.GOARCH)
+	zipFile, err := client.Download(version, runtime.GOOS, runtime.GOARCH)
 	if err != nil {
 		helpers.ExitWithError("downloading", err)
 	}
 
 	// Unzip the downloaded Terraform release
 	installLocation := paths.GetInstallLocation(version)
-	err = download.UnzipRelease(zipFile, installLocation)
+	err = client.UnzipRelease(zipFile, installLocation)
 	if err != nil {
 		helpers.ExitWithError("unzipping", err)
 	}
 
 	// Clean up the downloaded zip file after unzipping
-	err = download.DeleteDownloadedRelease(zipFile)
+	err = client.DeleteDownloadedRelease(zipFile)
 	if err != nil {
 		helpers.ExitWithError("cleaning up", err)
 	}
@@ -47,7 +46,7 @@ func InstallVersion(version string) {
 
 // InstallLatestVersion installs the latest Terraform version
 func InstallLatestVersion(preRelease bool) {
-	version := list.FindLatestVersion(preRelease)
+	version := client.FindLatestVersion(preRelease)
 	InstallVersion(version)
 }
 
@@ -59,7 +58,7 @@ func InstallRequiredVersion() {
 	}
 
 	var foundVersion string
-	availableVersions := list.GetAvailableVersions()
+	availableVersions := client.ListAvailableVersions()
 	for _, file := range terraformFiles {
 		requiredVersion, err := helpers.FindRequiredVersionInFile(file, availableVersions)
 		if err != nil {

@@ -7,9 +7,10 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+
+	"github.com/tfversion/tfversion/pkg/client"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/install"
-	"github.com/tfversion/tfversion/pkg/list"
 	"github.com/tfversion/tfversion/pkg/paths"
 )
 
@@ -63,7 +64,7 @@ func UseVersion(versionOrAlias string, autoInstall bool) {
 
 // UseLatestVersion activates the latest Terraform version
 func UseLatestVersion(preRelease bool, autoInstall bool) {
-	version := list.FindLatestVersion(preRelease)
+	version := client.FindLatestVersion(preRelease)
 	UseVersion(version, autoInstall)
 }
 
@@ -75,7 +76,7 @@ func UseRequiredVersion(autoInstall bool) {
 	}
 
 	var foundVersion string
-	availableVersions := list.GetAvailableVersions()
+	availableVersions := client.ListAvailableVersions()
 	for _, file := range terraformFiles {
 		requiredVersion, err := helpers.FindRequiredVersionInFile(file, availableVersions)
 		if err != nil {
@@ -98,14 +99,14 @@ func UseRequiredVersion(autoInstall bool) {
 
 // isAlias checks if the given alias is valid.
 func isAlias(alias string) bool {
-	aliasPath := paths.GetAliasLocation(alias)
+	aliasPath := filepath.Join(paths.GetAliasLocation(), alias)
 	_, err := os.Lstat(aliasPath)
 	return !os.IsNotExist(err)
 }
 
 // getAliasVersion returns the Terraform version for the given alias.
 func getAliasVersion(alias string) string {
-	aliasPath := paths.GetAliasLocation(alias)
+	aliasPath := filepath.Join(paths.GetAliasLocation(), alias)
 	resolvePath, err := filepath.EvalSymlinks(aliasPath)
 	if err != nil {
 		helpers.ExitWithError("resolving symlink", err)

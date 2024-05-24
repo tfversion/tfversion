@@ -1,4 +1,4 @@
-package download
+package client
 
 // func TestGetDownloadLocation(t *testing.T) {
 // 	tempDir := t.TempDir()

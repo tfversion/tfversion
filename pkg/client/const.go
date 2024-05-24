@@ -1,4 +1,4 @@
-package download
+package client
 
 const (
 	// TerraformReleasesUrl is the URL used to download Terraform releases from.

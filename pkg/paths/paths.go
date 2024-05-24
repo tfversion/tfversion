@@ -26,7 +26,7 @@ func GetDownloadLocation() string {
 }
 
 // GetAliasLocation returns the directory where tfversion stores the aliases.
-func GetAliasLocation(alias string) string {
+func GetAliasLocation() string {
 	user, err := os.UserHomeDir()
 	if err != nil {
 		helpers.ExitWithError("getting user home directory", err)
@@ -40,7 +40,7 @@ func GetAliasLocation(alias string) string {
 		}
 	}
 
-	return filepath.Join(aliasLocation, alias)
+	return aliasLocation
 }
 
 // GetUseLocation returns the directory where tfversion stores the symlink to the currently used Terraform version.

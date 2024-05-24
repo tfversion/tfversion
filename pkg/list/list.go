@@ -2,20 +2,17 @@ package list
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/tfversion/tfversion/pkg/alias"
+	"github.com/tfversion/tfversion/pkg/client"
 	"github.com/tfversion/tfversion/pkg/helpers"
 	"github.com/tfversion/tfversion/pkg/paths"
-	"golang.org/x/net/html"
 )
 
-// GetAliasedVersions returns the aliased Terraform versions from the `~/.tfversion/aliases` directory
+// GetAliasedVersions returns the aliased Terraform versions.
 func GetAliasedVersions() []string {
-	aliasLocation := alias.GetAliasLocation()
+	aliasLocation := paths.GetAliasLocation()
 
 	// find all aliases
 	aliasedVersions, err := os.ReadDir(aliasLocation)
@@ -40,7 +37,7 @@ func GetAliasedVersions() []string {
 	return versionNames
 }
 
-// GetInstalledVersions returns the installed Terraform versions from the `~/.tfversion/versions` directory
+// GetInstalledVersions returns the installed Terraform versions.
 func GetInstalledVersions() []string {
 	installLocation := paths.GetDownloadLocation()
 	installedVersions, err := os.ReadDir(installLocation)
@@ -70,53 +67,10 @@ func GetInstalledVersions() []string {
 
 // GetAvailableVersions returns the available Terraform versions from the official Terraform releases page
 func GetAvailableVersions() []string {
-	resp, err := http.Get(TerraformReleasesUrl)
-	if err != nil {
-		helpers.ExitWithError("getting Terraform releases page", err)
-	}
-	defer resp.Body.Close()
-
-	doc, err := html.Parse(resp.Body)
-	if err != nil {
-		helpers.ExitWithError("parsing HTML", err)
-	}
-
-	availableVersions := parseAvailableVersions(doc)
-	return availableVersions
-}
-
-func parseAvailableVersions(n *html.Node) []string {
-	var availableVersions []string
-
-	// find available verions in <a> elements
-	if n.Type == html.ElementNode && n.Data == "a" && strings.Contains(n.FirstChild.Data, "terraform") {
-		availableVersions = append(availableVersions, strings.Split(n.FirstChild.Data, "_")[1])
-	}
-
-	// recursively parse DOM elements
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		availableVersions = append(availableVersions, parseAvailableVersions(c)...)
-	}
-
-	return availableVersions
+	return client.ListAvailableVersions()
 }
 
 // FindLatestVersion finds the latest available Terraform version (or pre-release version)
 func FindLatestVersion(preRelease bool) string {
-	versions := GetAvailableVersions()
-	var foundVersion string
-	for _, v := range versions {
-		if !preRelease && helpers.IsPreReleaseVersion(v) {
-			continue
-		}
-		foundVersion = v
-		break
-	}
-
-	if len(foundVersion) == 0 {
-		err := fmt.Errorf("no versions found")
-		helpers.ExitWithError("finding latest version", err)
-	}
-
-	return foundVersion
+	return client.FindLatestVersion(preRelease)
 }

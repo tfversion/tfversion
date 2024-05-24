@@ -1,4 +1,4 @@
-package download
+package client
 
 import (
 	"archive/zip"
