@@ -2,20 +2,19 @@ package uninstall
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/tfversion/tfversion/pkg/download"
-	"github.com/tfversion/tfversion/pkg/helpers"
+	"tfversion/pkg/helpers"
+	"tfversion/pkg/store"
 )
 
 func Uninstall(version string) {
-	if !download.IsAlreadyDownloaded(version) {
+	if !store.IsInstalled(version) {
 		err := fmt.Errorf("terraform version %s is not installed", helpers.ColoredVersion(version))
 		helpers.ExitWithError("uninstalling", err)
 	}
 
-	installLocation := download.GetInstallLocation(version)
-	err := os.RemoveAll(installLocation)
+	installLocation := store.GetInstalledVersionLocation(version)
+	err := store.RemoveDir(installLocation)
 	if err != nil {
 		helpers.ExitWithError("deleting Terraform version", err)
 	}

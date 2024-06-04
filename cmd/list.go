@@ -4,8 +4,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/tfversion/tfversion/pkg/helpers"
-	"github.com/tfversion/tfversion/pkg/list"
+
+	"tfversion/pkg/helpers"
+	"tfversion/pkg/list"
 )
 
 const (
