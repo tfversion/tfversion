@@ -54,6 +54,7 @@ func RemoveSymlink(path string) error {
 	return err
 }
 
+// ListFiles returns a list of files in the given directory.
 func ListFiles(path string) ([]os.DirEntry, error) {
 	return os.ReadDir(path)
 }
