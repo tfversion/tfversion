@@ -4,8 +4,9 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/tfversion/tfversion/pkg/helpers"
-	"github.com/tfversion/tfversion/pkg/install"
+
+	"tfversion/pkg/helpers"
+	"tfversion/pkg/install"
 )
 
 const (

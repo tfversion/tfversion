@@ -1,4 +1,4 @@
-module github.com/tfversion/tfversion
+module tfversion
 
 go 1.21.4
 

@@ -1,15 +1,17 @@
-package download
+package client
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"tfversion/pkg/store"
 )
 
 func TestGetDownloadLocation(t *testing.T) {
 	tempDir := t.TempDir()
 	t.Setenv("HOME", tempDir)
-	downloadLocation := GetDownloadLocation()
+	downloadLocation := store.GetInstallLocation()
 
 	expectedLocation := filepath.Join(tempDir, ".tfversion", "versions")
 	if downloadLocation != expectedLocation {

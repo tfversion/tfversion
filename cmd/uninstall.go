@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/tfversion/tfversion/pkg/helpers"
-	"github.com/tfversion/tfversion/pkg/uninstall"
+
+	"tfversion/pkg/helpers"
+	"tfversion/pkg/uninstall"
 )
 
 const (
