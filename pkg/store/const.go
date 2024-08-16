@@ -10,5 +10,5 @@ const (
 	// AliasesDir is the directory where tfversion stores the aliases.
 	AliasesDir = "aliases"
 	// TerraformBinaryName is the name of the Terraform binary.
-	TerraformBinaryName = "terraform"
+	terraformBinaryName = "terraform"
 )
