@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"tfversion/pkg/store"
+	"tfversion/internal/store"
 )
 
 // UnzipRelease extracts the Terraform binary from the zip file to the specified destination.

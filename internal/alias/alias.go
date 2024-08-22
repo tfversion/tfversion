@@ -3,8 +3,8 @@ package alias
 import (
 	"fmt"
 
-	"tfversion/pkg/helpers"
-	"tfversion/pkg/store"
+	"tfversion/internal/helpers"
+	"tfversion/internal/store"
 )
 
 // AliasVersion creates a symlink to the specified Terraform version.

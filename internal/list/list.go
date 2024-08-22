@@ -3,9 +3,9 @@ package list
 import (
 	"fmt"
 
-	"tfversion/pkg/client"
-	"tfversion/pkg/helpers"
-	"tfversion/pkg/store"
+	"tfversion/internal/client"
+	"tfversion/internal/helpers"
+	"tfversion/internal/store"
 )
 
 // GetAliasedVersions returns the aliased Terraform versions.

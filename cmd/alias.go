@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"tfversion/pkg/alias"
-	"tfversion/pkg/helpers"
+	"tfversion/internal/alias"
+	"tfversion/internal/helpers"
 )
 
 const (

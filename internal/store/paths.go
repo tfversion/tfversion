@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"tfversion/pkg/helpers"
+	"tfversion/internal/helpers"
 )
 
 // ApplicationDir is the name of the directory where tfversion stores its data.

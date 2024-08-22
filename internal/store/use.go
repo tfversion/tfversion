@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"tfversion/pkg/helpers"
+	"tfversion/internal/helpers"
 )
 
 // GetUseLocation returns the directory where tfversion stores the symlink to the currently used Terraform version.

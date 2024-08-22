@@ -3,8 +3,8 @@ package current
 import (
 	"fmt"
 
-	"tfversion/pkg/helpers"
-	"tfversion/pkg/store"
+	"tfversion/internal/helpers"
+	"tfversion/internal/store"
 )
 
 // CheckCurrentVersion prints the current active version of Terraform.

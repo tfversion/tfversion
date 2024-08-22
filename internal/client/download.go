@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"time"
 
-	"tfversion/pkg/helpers"
-	"tfversion/pkg/store"
+	"tfversion/internal/helpers"
+	"tfversion/internal/store"
 )
 
 // Download downloads the Terraform release zip file for the given version, OS and architecture.

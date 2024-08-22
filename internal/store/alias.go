@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"tfversion/pkg/helpers"
+	"tfversion/internal/helpers"
 )
 
 // GetAliasLocation returns the directory where tfversion stores the aliases.

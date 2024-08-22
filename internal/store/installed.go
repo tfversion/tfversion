@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"tfversion/pkg/helpers"
+	"tfversion/internal/helpers"
 )
 
 // GetInstallLocation returns the directory where tfversion downloads Terraform releases to.
