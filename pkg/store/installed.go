@@ -31,5 +31,5 @@ func GetInstalledVersionLocation(version string) string {
 
 // GetBinaryLocation returns the path to the Terraform binary for the given version.
 func GetBinaryLocation(version string) string {
-	return filepath.Join(GetInstalledVersionLocation(version), TerraformBinaryName)
+	return filepath.Join(GetInstalledVersionLocation(version), GetTerraformBinaryName())
 }

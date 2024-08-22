@@ -34,7 +34,7 @@ func UnzipRelease(source, destination string) error {
 
 	// Iterate over zip files inside the archive and unzip only the "terraform" binary.
 	for _, f := range reader.File {
-		if f.Name == store.TerraformBinaryName {
+		if f.Name == store.GetTerraformBinaryName() {
 			return unzipFile(f, destination)
 		}
 	}

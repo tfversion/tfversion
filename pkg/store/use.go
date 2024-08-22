@@ -2,6 +2,7 @@ package store
 
 import (
 	"path/filepath"
+	"runtime"
 
 	"tfversion/pkg/helpers"
 )
@@ -18,5 +19,14 @@ func GetUseLocation() string {
 
 // GetActiveBinaryLocation returns the path to the currently active Terraform binary.
 func GetActiveBinaryLocation() string {
-	return filepath.Join(GetUseLocation(), TerraformBinaryName)
+	return filepath.Join(GetUseLocation(), GetTerraformBinaryName())
+}
+
+// GetTerraformBinaryName returns the name of the Terraform binary.
+func GetTerraformBinaryName() string {
+	if runtime.GOOS == "windows" {
+		return terraformBinaryName + ".exe"
+	} else {
+		return terraformBinaryName
+	}
 }
