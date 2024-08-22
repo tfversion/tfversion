@@ -3,8 +3,8 @@ package uninstall
 import (
 	"fmt"
 
-	"tfversion/pkg/helpers"
-	"tfversion/pkg/store"
+	"tfversion/internal/helpers"
+	"tfversion/internal/store"
 )
 
 func Uninstall(version string) {

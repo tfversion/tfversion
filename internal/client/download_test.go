@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"tfversion/pkg/store"
+	"tfversion/internal/store"
 )
 
 func TestGetDownloadLocation(t *testing.T) {

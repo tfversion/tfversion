@@ -3,8 +3,8 @@ package unalias
 import (
 	"fmt"
 
-	"tfversion/pkg/helpers"
-	"tfversion/pkg/store"
+	"tfversion/internal/helpers"
+	"tfversion/internal/store"
 )
 
 // Unalias removes the symlink for the specified alias.

@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"tfversion/pkg/helpers"
-	"tfversion/pkg/list"
+	"tfversion/internal/helpers"
+	"tfversion/internal/list"
 )
 
 const (

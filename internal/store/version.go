@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"tfversion/pkg/helpers"
+	"tfversion/internal/helpers"
 )
 
 // GetInstalledVersions returns a list of all installed Terraform versions.

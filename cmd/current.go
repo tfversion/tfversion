@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"tfversion/pkg/current"
+	"tfversion/internal/current"
 )
 
 const (
