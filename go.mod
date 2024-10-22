@@ -3,7 +3,7 @@ module tfversion
 go 1.21.4
 
 require (
-	github.com/fatih/color v1.17.0
+	github.com/fatih/color v1.18.0
 	github.com/hashicorp/go-version v1.7.0
 	github.com/spf13/cobra v1.8.1
 	golang.org/x/net v0.30.0
