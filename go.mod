@@ -6,7 +6,7 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/hashicorp/go-version v1.7.0
 	github.com/spf13/cobra v1.8.1
-	golang.org/x/net v0.32.0
+	golang.org/x/net v0.33.0
 )
 
 require (
