@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
 	"tfversion/internal/helpers"
@@ -22,18 +23,28 @@ func Download(version string) (string, error) {
 	downloadURL := fmt.Sprintf("%s/%s/%s", TerraformReleasesUrl, version, fileName)
 
 	var err error
-	for attempt := 1; attempt <= MaxRetries; attempt++ {
+	var attempt int
+	for attempt = 1; attempt <= MaxRetries; attempt++ {
 		if err = downloadWithRetry(downloadURL, downloadLocation, fileName); err == nil {
 			fmt.Printf("Terraform version %s downloaded successfully\n", helpers.ColoredVersion(version))
 			return fmt.Sprintf("%s/%s", downloadLocation, fileName), nil
 		}
-
+		if strings.Contains(err.Error(), "404 Not Found") {
+			if attempt == 1 && runtime.GOOS == "darwin" && runtime.GOARCH == "arm64" {
+				fmt.Printf("Attempt %d failed: %s\n", attempt, err)
+				fmt.Printf("ARM build not found, retrying with amd64 build\n")
+				fileName = fmt.Sprintf("terraform_%s_%s_amd64.zip", version, runtime.GOOS)
+				downloadURL = fmt.Sprintf("%s/%s/%s", TerraformReleasesUrl, version, fileName)
+				continue
+			}
+			break
+		}
 		fmt.Printf("Attempt %d failed: %s\n", attempt, err)
 		time.Sleep(time.Second * RetryTimeInSeconds)
 	}
 
 	// if we got here, we failed to download Terraform after MaxRetries attempts
-	return "", fmt.Errorf("failed to download Terraform from %s after %d attempts: %s", downloadURL, MaxRetries, err)
+	return "", fmt.Errorf("failed to download Terraform from %s after %d attempts: %s", downloadURL, attempt, err)
 }
 
 func downloadWithRetry(downloadURL, downloadLocation, fileName string) error {
